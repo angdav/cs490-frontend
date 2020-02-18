@@ -1,0 +1,41 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>435 Project</title>
+</head>
+
+<body>
+    <div id="mainbody" style="text-align: center">
+        <h1>This is the main page</h1>
+        <table style="margin: auto">
+            <tr>
+                <td>Username</td>
+                <td><input id="user" name="user" type="text"/></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input id="pass" name="pass" type="password"/></td>
+            </tr>
+        </table>
+        <br>
+        <input type="submit" onclick="getstuff(document.getElementById('user').value, document.getElementById('pass').value)" style="margin: auto; text-align: center">
+        <div id="result"></div>
+    </div>
+    <script>
+    function getstuff(user, pass){
+        var xhttp;
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200){
+                document.getElementById("result").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", "rec.php", true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp.send("u="+user+"&p="+pass);
+    }
+    </script>
+</body>
+</html>
