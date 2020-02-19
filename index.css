@@ -5,6 +5,18 @@
 body{
     background-color:#222;
     color: white;
+    text-align: center;
+}
+
+caption {
+    padding: 15px;
+    text-align: left;
+}
+
+#info th, #info td, #info tr, #info{
+    border-collapse: collapse;
+    border: 1px solid white;
+    padding: 15px;
 }
 
 button {
@@ -16,13 +28,15 @@ button {
     margin: .5em;
     transition: .5s;
     font-size: 1.5em;
+    font-weight: bolder;
     box-shadow:5px 5px #444a;
-    animation: fadein 1s;
+    animation: fadein 2s;
 }
 
 button:hover {
     background-color: #ada;
     color: #444;
+    box-shadow: 5px 5px #232;
 }
 
 ::placeholder{
@@ -46,16 +60,16 @@ button:hover {
     margin: .25em;
     caret-color: white;
     transition: 0.5s;
-    font-weight: 900;
+    font-weight: bolder;
     width: 300px;
     font-size: 1.5em;
     box-shadow:5px 5px #444a;
-    animation: fadein 1s;
+    animation: fadein 2s;
 }
 
 @keyframes fadein{
-    0%  {opacity: 0; transform:rotate(350deg) translate(50px, 100px)}
-    100%  {opacity: 1; transform:rotate(360deg) }
+    0%  {opacity: 0}
+    100%  {opacity: 1}
 }
 
 #user:hover, #pass:hover{
@@ -66,4 +80,10 @@ button:hover {
 #user::selection, #pass::selection{
     background-color: #fff5;
     color: white;
+}
+
+#result {
+    font-size: 1.5em;
+    margin: 0 auto;
+    display: inline-block;
 }

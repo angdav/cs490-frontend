@@ -10,7 +10,7 @@
 
 <body>
     <div id="mainbody">
-        <h1>login</h1>
+        <h1></h1>
         <table id="login">
             <tr>
                 <td><input id="user" name="user" type="text" placeholder="Username"/></td>
@@ -21,10 +21,11 @@
         </table>
         <br>
         <button type="button" onclick="getstuff(document.getElementById('user').value, document.getElementById('pass').value)">submit</button>
-        <div id="result"></div>
     </div>
+    
+    <div id="result"></div>
 
-    <script>   
+    <script>
     function getstuff(user, pass){
         var xhttp;
         xhttp = new XMLHttpRequest();
