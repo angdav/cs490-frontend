@@ -6,24 +6,25 @@
 	<title>490 Project</title>
 </head>
 
+<link rel="stylesheet" href='index.css'/>
+
 <body>
-    <div id="mainbody" style="text-align: center">
-        <h1>This is the main page</h1>
-        <table style="margin: auto">
+    <div id="mainbody">
+        <h1>login</h1>
+        <table id="login">
             <tr>
-                <td>Username</td>
-                <td><input id="user" name="user" type="text"/></td>
+                <td><input id="user" name="user" type="text" placeholder="Username"/></td>
             </tr>
             <tr>
-                <td>Password</td>
-                <td><input id="pass" name="pass" type="password"/></td>
+                <td><input id="pass" name="pass" type="password" placeholder="Password"/></td>
             </tr>
         </table>
         <br>
-        <input type="submit" onclick="getstuff(document.getElementById('user').value, document.getElementById('pass').value)" style="margin: auto; text-align: center">
+        <button type="button" onclick="getstuff(document.getElementById('user').value, document.getElementById('pass').value)">submit</button>
         <div id="result"></div>
     </div>
-    <script>
+
+    <script>   
     function getstuff(user, pass){
         var xhttp;
         xhttp = new XMLHttpRequest();

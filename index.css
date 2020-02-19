@@ -1,0 +1,69 @@
+* {
+    font-family: "Inconsolata";
+}
+
+body{
+    background-color:#222;
+    color: white;
+}
+
+button {
+    background-color: #444;
+    color: #ccc;
+    padding: .5em;
+    border: 0em;
+    border-radius: 1em;
+    margin: .5em;
+    transition: .5s;
+    font-size: 1.5em;
+    box-shadow:5px 5px #444a;
+    animation: fadein 1s;
+}
+
+button:hover {
+    background-color: #ada;
+    color: #444;
+}
+
+::placeholder{
+    color: #ccc;
+}
+
+#mainbody {
+    text-align: center;
+}
+
+#login {
+    margin: auto;
+}
+
+#user, #pass {
+    color: white;
+    padding: 1em;
+    background: #444;
+    border: 0em;
+    border-radius: 2em;
+    margin: .25em;
+    caret-color: white;
+    transition: 0.5s;
+    font-weight: 900;
+    width: 300px;
+    font-size: 1.5em;
+    box-shadow:5px 5px #444a;
+    animation: fadein 1s;
+}
+
+@keyframes fadein{
+    0%  {opacity: 0; transform:rotate(350deg) translate(50px, 100px)}
+    100%  {opacity: 1; transform:rotate(360deg) }
+}
+
+#user:hover, #pass:hover{
+    background-color: #fff5;
+    color: white;
+}
+
+#user::selection, #pass::selection{
+    background-color: #fff5;
+    color: white;
+}
