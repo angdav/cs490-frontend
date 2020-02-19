@@ -3,6 +3,7 @@
 $user = $_REQUEST["u"];
 $pass = $_REQUEST["p"];
 
+echo "<br>";
 echo "username: " .  $user . "<br>";
 echo "password: " .  $pass . "<br>";
 
@@ -26,7 +27,7 @@ function curl($url) {
 
 $url = "https://web.njit.edu/~co77/cs490/alpha/index.php";
 $json = curl($url);
-echo "<br>output: " . $json->status . $json->message;
+echo "<br><br>OUTPUT<br> " . "status: " . $json->status . "<br>message: " . $json->message;
 
 curl_close($ch);
 
