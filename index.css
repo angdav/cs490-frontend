@@ -1,5 +1,5 @@
 * {
-    font-family: "Inconsolata";
+    font-family: "Sans-Serif";
 }
 
 body{
@@ -11,6 +11,11 @@ body{
 caption {
     padding: 15px;
     text-align: left;
+}
+
+#title {
+    animation: fadein 2s;
+    font-size: 4em;
 }
 
 #info th, #info td, #info tr, #info{
@@ -53,6 +58,7 @@ button:hover {
 
 #user, #pass {
     color: white;
+    top: 50%;
     padding: 1em;
     background: #444;
     border: 0em;
