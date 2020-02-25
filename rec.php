@@ -30,7 +30,6 @@ $json = curl($url);
 echo "<br><br>";
 echo "<table id='info'>";
 echo "<caption>OUTPUT</caption>";
-echo "<tr><td>status</td><td>$json->status</td></tr>";
 echo "<tr><td>db result</td><td>$json->db</td></tr>";
 echo "<tr><td>njit result</td><td>$json->njit</td></tr>";
 echo "</table>";
