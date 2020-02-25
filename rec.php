@@ -24,7 +24,7 @@ function curl($url) {
     return json_decode($output);
 }
 
-$url = "https://web.njit.edu/~mba27/cs490/stuff.php";
+$url = "https://web.njit.edu/~mba27/cs490/connect.php";
 $json = curl($url);
 
 echo "<br><br>";

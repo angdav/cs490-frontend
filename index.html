@@ -20,24 +20,40 @@
             </tr>
         </table>
         <br>
-        <button type="button" onclick="getstuff(document.getElementById('user').value, document.getElementById('pass').value)">Submit</button>
+        <button id="submit" type="button">Submit</button>
     </div>
     
+    <div id="loading"></div>
     <div id="result"></div>
 
     <script>
-    function getstuff(user, pass){
-        var xhttp;
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200){
-                document.getElementById("result").innerHTML = this.responseText;
-            }
-        };
-        xhttp.open("POST", "rec.php", true);
-        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhttp.send("u="+user+"&p="+pass);
-    }
+        var submit = document.getElementById("submit");
+        var result = document.getElementById("result");
+        var loading = document.getElementById("loading");
+
+        submit.addEventListener('click', function (){
+            result.style.display = 'none';
+            loading.style.display = 'inline-block';
+            setTimeout(function(){
+                getstuff(document.getElementById('user').value, document.getElementById('pass').value);
+            }, 500);
+        });
+
+
+        function getstuff(user, pass){
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4){
+                    result.style.display = 'inline-block';
+                    loading.style.display = 'none';
+                    document.getElementById("result").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("POST", "rec.php", true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send("u="+user+"&p="+pass);
+        }
+
     </script>
 </body>
 </html>
