@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Main Screen</title>
+</head>
+
+<link rel="stylesheet" href='index.css'/>
+
+<body>
+    <table>
+        <tr>
+            <td><button id="addquestion" type="button">Add Question</button></td>
+        </tr>
+        <tr>
+            <td><button id="createexam" type="button">Create Exam</button></td>
+        </tr>
+        <tr>
+            <td><button id="gradeexam" type="button">Grade Exam</button></td>
+        </tr>
+    </table>
+    
+
+    <script>
+        var addquestion = document.getElementById('addquestion');
+        var createexam = document.getElementById('createexam');
+        var gradeexam = document.getElementById('gradeexam');
+
+        addquestion.addEventListener('click', function(){
+            window.location.href = "addquestion.html";
+        });
+        createexam.addEventListener('click', function(){
+            window.location.href = "createexam.html";
+        });
+        gradeexam.addEventListener('click', function(){
+            window.location.href = "gradeexam.html";
+        });
+
+    </script>
+</body>
+
+</html>

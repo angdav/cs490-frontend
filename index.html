@@ -47,6 +47,11 @@
                     result.style.display = 'inline-block';
                     loading.style.display = 'none';
                     document.getElementById("result").innerHTML = this.responseText;
+                    if (this.responseText.includes("Professor")){
+                        window.location.href = "profmain.html";
+                    } else if (this.responseText.includes("Student")){
+                        window.location.href = "studentmain.html";
+                    }
                 }
             };
             xhttp.open("POST", "rec.php", true);

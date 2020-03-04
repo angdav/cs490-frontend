@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Question</title>
+</head>
+
+<link rel="stylesheet" href='index.css'/>
+
+<body>
+    <div id="mainbody" style="float: left; width: 50%; max-width: 50%">
+        <table style="width: 80%; max-width: 80%;">
+            <h1>Submit a Question</h1>
+            <tr>
+                <td><input id="questionname" name="questionname" type="text" placeholder="Question Name"/></td>
+            </tr>
+            <tr>
+                <td><textarea id="questionprompt" name="questionprompt" type="text" placeholder="Prompt"></textarea></td>
+            </tr>
+            <tr>
+                <td><select id="difficulty">
+                    <option value="empty" selected="selected">Choose Difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="med">Medium</option>
+                    <option value="hard">Hard</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td><select id="topic">
+                    <option value="empty" selected="selected">Choose Topic</option>
+                    <option value="variables">Variables</option>
+                    <option value="operators">Operators</option>
+                    <option value="functions">Functions</option>
+                    <option value="classes">Classes</option>
+                    <option value="loops">Loops</option>
+                    <option value="turtle">Turtle</option>
+                </select></td>
+            </tr>
+        </table>
+        <br>
+        <button id="submit" type="button">Submit</button>
+    </div>
+    <div id="questionbank" style="float: right; width: 50%">
+        <h1>Question Bank</h1>
+    </div>
+
+</body>
+</html>
