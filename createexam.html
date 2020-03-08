@@ -5,7 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Exam</title>
 </head>
+
+<link rel="stylesheet" href='index.css'/>
+
 <body>
-    
+    <div id="mainbody" style="float: left; width: 50%; max-width: 50%">
+        <table style="width: 80%; max-width: 80%;">
+            <h1>Create an Exam</h1>
+            <tr>
+                <td><input id="examname" name="examname" type="text" placeholder="Exam Name"/></td>
+            </tr>
+            <tr id="questionarea">
+                
+            </tr>
+        </table>
+        <br>
+        <button id="submit" type="button">Submit</button>
+    </div>
+    <div id="questionbank" style="float: right; width: 50%">
+        <h1>Question Bank</h1>
+    </div>
+
+    <script>
+        var submit = document.getElementById("submit");
+        var questionarea = document.getElementById("questionarea");
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4){
+                questionarea.innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", "qbank.php", true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp.send();
+
+        submit.addEventListener('click', function (){
+            result.style.display = 'none';
+            loading.style.display = 'inline-block';
+            setTimeout(function(){
+                getstuff(document.getElementById('user').value, document.getElementById('pass').value);
+            }, 500);
+        });
+
+    </script>
 </body>
 </html>

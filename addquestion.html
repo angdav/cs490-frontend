@@ -9,8 +9,8 @@
 <link rel="stylesheet" href='index.css'/>
 
 <body>
-    <div id="mainbody" style="float: left; width: 50%; max-width: 50%">
-        <table style="width: 80%; max-width: 80%;">
+    <div style="float: left; width: 50%; max-width: 50%">
+        <table id="maintable" style="width: 80%; max-width: 80%;">
             <h1>Submit a Question</h1>
             <tr>
                 <td><input id="questionname" name="questionname" type="text" placeholder="Question Name"/></td>
@@ -37,13 +37,88 @@
                     <option value="turtle">Turtle</option>
                 </select></td>
             </tr>
+
+            <table id="argtable">
+                <h3>Arguments</h3></table>
+
+            <table id="testcasetable">
+                <h3>Test cases</h3></table>
+
+            <tr>
+                <td><button id="addarg" type="button">Add argument</button></td>
+            </tr>
+            <tr>
+                <td><button id="addtestcase" type="button">Add test case</button></td>
+            </tr>
         </table>
-        <br>
+        <br><br><br>
         <button id="submit" type="button">Submit</button>
     </div>
     <div id="questionbank" style="float: right; width: 50%">
         <h1>Question Bank</h1>
     </div>
+
+    <script>
+        var submit = document.getElementById("submit");
+        var questionprompt = document.getElementById("questionprompt");
+        var difficulty = document.getElementById("difficulty");
+        var topic = document.getElementById("topic");
+        var argtable = document.getElementById("argtable");
+        var testcasetable = document.getElementById("testcasetable");
+
+        var addarg = document.getElementById("addarg");
+        var addtestcase = document.getElementById("addtestcase");
+
+        addarg.addEventListener('click', function(){
+            var newRow = argtable.insertRow();
+            newRow.innerHTML = '<td><input type="text" placeholder="Argument name"/></td><td><input type="textarea" placeholder="Description"/></td>';
+        });
+
+        addtestcase.addEventListener('click', function(){
+            var newRow = testcasetable.insertRow();
+            newRow.innerHTML = '<td><input type="text" placeholder="Input"/></td><td><input type="text" placeholder="Output"/></td>';
+        });
+
+        submit.addEventListener('click', function (){
+            addquestion();
+        });
+
+        function addquestion(){
+            var arg_c = 0;
+            for (var i=0, row; row = argtable.rows[i]; i++){
+                argname = row.cells[0].children[0].value;
+                argdesc = row.cells[1].children[0].value;
+                arg_c++;
+            }
+
+            var test_c = 0;
+            for (var i=0, row; row = testcasetable.rows[i]; i++){
+                input = row.cells[0].children[0].value;
+                output = row.cells[1].children[0].value;
+                test_c++;
+            }
+
+            /*
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4){
+                    result.style.display = 'inline-block';
+                    loading.style.display = 'none';
+                    document.getElementById("result").innerHTML = this.responseText;
+                    if (this.responseText.includes("Professor")){
+                        window.location.href = "profmain.html";
+                    } else if (this.responseText.includes("Student")){
+                        window.location.href = "studentmain.html";
+                    }
+                }
+            };
+            xhttp.open("POST", "rec.php", true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send("u="+user+"&p="+pass);
+            */
+        }
+
+    </script>
 
 </body>
 </html>
