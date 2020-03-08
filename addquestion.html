@@ -21,9 +21,9 @@
             <tr>
                 <td><select id="difficulty">
                     <option value="empty" selected="selected">Choose Difficulty</option>
-                    <option value="easy">Easy</option>
-                    <option value="med">Medium</option>
-                    <option value="hard">Hard</option>
+                    <option value="0">Easy</option>
+                    <option value="1">Medium</option>
+                    <option value="2">Hard</option>
                 </select></td>
             </tr>
             <tr>
@@ -85,37 +85,49 @@
 
         function addquestion(){
             var arg_c = 0;
+
+            var arg_v = {};
             for (var i=0, row; row = argtable.rows[i]; i++){
                 argname = row.cells[0].children[0].value;
                 argdesc = row.cells[1].children[0].value;
+                arg_v[i+1] = {"name": argname, "desc": argdesc};
                 arg_c++;
             }
 
             var test_c = 0;
+            var test_v = {};
             for (var i=0, row; row = testcasetable.rows[i]; i++){
                 input = row.cells[0].children[0].value;
                 output = row.cells[1].children[0].value;
+                test_v[i+1] = {"input": input, "output": output};
                 test_c++;
             }
 
-            /*
+
+            var finalJSON = { 
+                "action": "addquestion",
+                "contents": {
+                    "topic": topic.value,
+                    "difficulty": difficulty.value,
+                    "question": questionprompt.value,
+                    "arg_c": arg_c,
+                    "arg_v": arg_v,
+                    "test_c": test_c,
+                    "test_v": test_v
+                }
+            };
+
+            var questionbank = document.getElementById("questionbank");
+            
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    result.style.display = 'inline-block';
-                    loading.style.display = 'none';
-                    document.getElementById("result").innerHTML = this.responseText;
-                    if (this.responseText.includes("Professor")){
-                        window.location.href = "profmain.html";
-                    } else if (this.responseText.includes("Student")){
-                        window.location.href = "studentmain.html";
-                    }
+                    questionbank.innerHTML += this.responseText;
                 }
             };
-            xhttp.open("POST", "rec.php", true);
+            xhttp.open("POST", "addquestion.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send("u="+user+"&p="+pass);
-            */
+            xhttp.send("req="+JSON.stringify(finalJSON));
         }
 
     </script>
