@@ -135,3 +135,9 @@ textarea {
     0%  {transform:rotate(0)}
     100%  {transform:rotate(360deg)}
 }
+
+#qbanktable, #qbanktd, th{
+    border: 1px solid white;
+    border-collapse: collapse;
+    padding: .5em;
+}

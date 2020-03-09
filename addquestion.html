@@ -76,15 +76,22 @@
         xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
                 var response = this.responseText;
-                alert(response);
-                var msgs = JSON.parse(JSON.parse(response).message);
-                for (var i in msgs){
-                    console.log(msgs[i].q_num);
-                    console.log(msgs[i].difficulty);
-                    console.log(msgs[i].question);
-                    console.log(msgs[i].arg_c);
-                    console.log(msgs[i].arg_v);
+                // alert(response);
+                var msgs = JSON.parse(response).message;
+                console.log(msgs);
+                var table = document.createElement('table');
+                table.id = 'qbanktable';
+                table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th></tr>";
+                header = ['q_num', 'name', 'topic', 'difficulty', 'question'];
+                for (var i=1; i <= msgs.count; i++){
+                    var tr = table.insertRow();
+                    for (var j=0; j < header.length; j++){
+                        var td = tr.insertCell();
+                        td.id = 'qbanktd';
+                        td.appendChild(document.createTextNode(msgs[i][header[j]]));
+                    }
                 }
+                questionbank.appendChild(table);
             }
         };
         xhttp2.open("POST", "qbank.php", true);
