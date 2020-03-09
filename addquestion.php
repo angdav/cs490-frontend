@@ -18,7 +18,7 @@ function curl($url) {
 $url = "https://web.njit.edu/~co77/cs490/beta/upload_question.php";
 $json = curl($url);
 
-echo $json;
+echo $json->status . $json->message;
 
 curl_close($ch);
 ?>
