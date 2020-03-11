@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href='index.css'/>
 
-<body>
+<body id="body">
     <table>
         <tr>
             <td><button id="addquestion" type="button">Add Question</button></td>
@@ -19,13 +19,19 @@
         <tr>
             <td><button id="gradeexam" type="button">Grade Exam</button></td>
         </tr>
+        <tr>
+            <td><button id="logout" type="button">Logout</button></td>
+        </tr>
     </table>
     
-
+    <script src="auth.js"></script>
     <script>
+        checkauth(1);
+
         var addquestion = document.getElementById('addquestion');
         var createexam = document.getElementById('createexam');
         var gradeexam = document.getElementById('gradeexam');
+        var logoutbutton = document.getElementById('logout');
 
         addquestion.addEventListener('click', function(){
             window.location.href = "addquestion.html";
@@ -35,6 +41,9 @@
         });
         gradeexam.addEventListener('click', function(){
             window.location.href = "gradeexam.html";
+        });
+        logoutbutton.addEventListener('click', function(){
+            logout();
         });
 
     </script>

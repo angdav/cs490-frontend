@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href='index.css'/>
 
-<body>
+<body id="body">
     <div style="float: left; width: 50%; max-width: 50%">
         <table id="maintable" style="width: 80%; max-width: 80%;">
             <h1>Submit a Question</h1>
@@ -58,7 +58,10 @@
         <h1>Question Bank</h1>
     </div>
 
+    <script src="auth.js"></script>
     <script>
+        checkauth(1);
+
         var submit = document.getElementById("submit");
         var questionname = document.getElementById("questionname");
         var questionprompt = document.getElementById("questionprompt");
@@ -132,7 +135,6 @@
                 test_c++;
             }
 
-
             var finalJSON = { 
                 "action": "addquestion",
                 "contents": {
@@ -146,7 +148,6 @@
                     "test_v": test_v
                 }
             };
-
             
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {

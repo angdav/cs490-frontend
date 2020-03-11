@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Main Screen</title>
+</head>
+
+<link rel="stylesheet" href='index.css'/>
+
+<body id="body">
+    <table>
+        <tr>
+            <td><button id="logout" type="button">Logout</button></td>
+        </tr>
+    </table>
+    
+    <script src="auth.js"></script>
+    <script>
+        checkauth(2);
+
+        var logoutbutton = document.getElementById('logout');
+
+        logoutbutton.addEventListener('click', function(){
+            logout();
+        });
+
+    </script>
+</body>
+</html>

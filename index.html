@@ -39,6 +39,12 @@
             }, 500);
         });
 
+        function setauth(usr){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "setauth.php", true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send("usr="+usr);
+        }
 
         function getstuff(user, pass){
             var xhttp = new XMLHttpRequest();
@@ -49,8 +55,10 @@
                     document.getElementById("result").innerHTML = this.responseText;
                     if (this.responseText.includes("Professor")){
                         window.location.href = "profmain.html";
+                        setauth(1);
                     } else if (this.responseText.includes("Student")){
                         window.location.href = "studentmain.html";
+                        setauth(2);
                     }
                 }
             };

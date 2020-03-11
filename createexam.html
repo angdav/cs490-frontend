@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href='index.css'/>
 
-<body>
+<body id="body">
     <div id="mainbody" style="float: left; width: 50%; max-width: 50%">
         <table style="width: 80%; max-width: 80%;">
             <h1>Create an Exam</h1>
@@ -26,7 +26,10 @@
         <h1>Question Bank</h1>
     </div>
 
+    <script src="auth.js"></script>
     <script>
+        checkauth(1);
+    
         var submit = document.getElementById("submit");
         var questionarea = document.getElementById("questionarea");
 
