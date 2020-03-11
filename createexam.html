@@ -29,19 +29,48 @@
     <script src="auth.js"></script>
     <script>
         checkauth(1);
+
+        var globalmsgs = 0;
     
         var submit = document.getElementById("submit");
         var questionarea = document.getElementById("questionarea");
+        var questionbank = document.getElementById("questionbank");
 
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
-                questionarea.innerHTML = this.responseText;
+                var response = this.responseText;
+                // alert(response);
+                var msgs = JSON.parse(response).message;
+                globalmsgs = msgs;
+                console.log(msgs);
+                var table = document.createElement('table');
+                table.id = 'qbanktable';
+                table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th></tr>";
+                header = ['q_num', 'name', 'topic', 'difficulty', 'question'];
+                for (var i=1; i <= msgs.count; i++){
+                    var tr = table.insertRow();
+                    for (var j=0; j < header.length; j++){
+                        var td = tr.insertCell();
+                        td.id = 'qbanktd';
+                        td.appendChild(document.createTextNode(msgs[i][header[j]]));
+                    }
+                    var addtd = tr.insertCell();
+                    addtd.id = 'qbanktd';
+                    addtd.innerHTML = "<button onclick=\"deleteRow(this)\" style=\"width: 3em\">+</button>";
+                }
+                questionbank.appendChild(table);
             }
         };
-        xhttp.open("POST", "qbank.php", true);
-        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhttp.send();
+        xhttp2.open("POST", "qbank.php", true);
+        xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp2.send();
+
+        function deleteRow(r){
+            var i = r.parentNode.parentNode.rowIndex;
+            document.getElementById("qbanktable").deleteRow(i);
+            alert(globalmsgs[i]['name']);
+        }
 
         submit.addEventListener('click', function (){
             result.style.display = 'none';
