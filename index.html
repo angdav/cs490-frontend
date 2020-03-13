@@ -39,11 +39,11 @@
             }, 500);
         });
 
-        function setauth(usr){
+        function setauth(usr, username){
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "setauth.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send("usr="+usr);
+            xhttp.send("usr="+usr+"&username="+username);
         }
 
         function getstuff(user, pass){
@@ -55,10 +55,10 @@
                     document.getElementById("result").innerHTML = this.responseText;
                     if (this.responseText.includes("Professor")){
                         window.location.href = "profmain.html";
-                        setauth(1);
+                        setauth(1, user);
                     } else if (this.responseText.includes("Student")){
                         window.location.href = "studentmain.html";
-                        setauth(2);
+                        setauth(2, user);
                     }
                 }
             };

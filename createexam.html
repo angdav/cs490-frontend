@@ -15,8 +15,24 @@
             <tr>
                 <td><input id="examname" name="examname" type="text" placeholder="Exam Name"/></td>
             </tr>
-            <tr id="questionarea">
-                
+            <tr>
+                <td><select id="t_num">
+                    <option value="empty" selected="selected">Choose Exam Number</option>
+                    <option value="0">Midterm 1</option>
+                    <option value="1">Midterm 2</option>
+                    <option value="2">Final Exam</option>
+                </select></td>
+            </tr>
+            <tr>
+                <table id="questionarea" style="margin-top: 30px">
+                    <tr>
+                        <th>q_num</th>
+                        <th>name</th>
+                        <th>topic</th>
+                        <th>difficulty</th>
+                        <th>question</th>
+                    </tr>
+                </table>
             </tr>
         </table>
         <br>
@@ -49,6 +65,15 @@
                 table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th></tr>";
                 header = ['q_num', 'name', 'topic', 'difficulty', 'question'];
                 for (var i=1; i <= msgs.count; i++){
+                    if (msgs[i][header[3]] == "0") {
+                        msgs[i][header[3]] = "easy";
+                    } else if (msgs[i][header[3]] == "1") {
+                        msgs[i][header[3]] = "medium";
+                    } else {
+                        msgs[i][header[3]] = "hard";
+                    }
+                }
+                for (var i=1; i <= msgs.count; i++){
                     var tr = table.insertRow();
                     for (var j=0; j < header.length; j++){
                         var td = tr.insertCell();
@@ -68,17 +93,57 @@
 
         function deleteRow(r){
             var i = r.parentNode.parentNode.rowIndex;
+            var tablerows = r.parentNode.parentNode.children;
+            var tr = questionarea.insertRow();
+            for (var j=0; j < header.length; j++){
+                var td = tr.insertCell();
+                td.id = 'qbanktd';
+                td.appendChild(document.createTextNode(tablerows[j].innerHTML));
+            }
             document.getElementById("qbanktable").deleteRow(i);
-            alert(globalmsgs[i]['name']);
         }
 
         submit.addEventListener('click', function (){
-            result.style.display = 'none';
-            loading.style.display = 'inline-block';
-            setTimeout(function(){
-                getstuff(document.getElementById('user').value, document.getElementById('pass').value);
-            }, 500);
+            addexam();
         });
+
+        function addexam(){
+            var profname = getusername();
+
+            var q_v = {};
+            for (var i=1, row; row = questionarea.rows[i]; i++){
+                q_num = row.cells[0].childNodes[0].nodeValue;
+                q_v[i] = {"q_num": q_num};
+            }
+
+            var t_num = document.getElementById("t_num");
+
+            var finalJSON = {
+                "professor": profname,
+                "t_num": t_num.value, 
+                "q_c": questionarea.rows.length - 1,
+                "q_v": q_v
+            };
+            
+            var xhttp2 = new XMLHttpRequest();
+            xhttp2.onreadystatechange = function() {
+                if (this.readyState == 4){
+                    console.log(JSON.stringify(finalJSON));
+                    alert(this.responseText);
+                }
+            };
+            xhttp2.open("POST", "createexam.php", true);
+            xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp2.send("req="+JSON.stringify(finalJSON));
+        }
+
+        function getusername(){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "getusername.php", false);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send();
+            return xhttp.responseText;
+        }
 
     </script>
 </body>
