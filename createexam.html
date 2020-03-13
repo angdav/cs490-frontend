@@ -31,8 +31,14 @@
                         <th>topic</th>
                         <th>difficulty</th>
                         <th>question</th>
+                        <th>points</th>
+                        <th>remove</th>
                     </tr>
                 </table>
+            </tr>
+            <br>
+            <tr>
+                <h2>Point Total: <div style="display: inline-block" id="pointtotal"></div></h2>
             </tr>
         </table>
         <br>
@@ -51,6 +57,7 @@
         var submit = document.getElementById("submit");
         var questionarea = document.getElementById("questionarea");
         var questionbank = document.getElementById("questionbank");
+        var pointtotal = document.getElementById("pointtotal");
 
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = function() {
@@ -62,7 +69,7 @@
                 console.log(msgs);
                 var table = document.createElement('table');
                 table.id = 'qbanktable';
-                table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th></tr>";
+                table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th><th>add</th></tr>";
                 header = ['q_num', 'name', 'topic', 'difficulty', 'question'];
                 for (var i=1; i <= msgs.count; i++){
                     if (msgs[i][header[3]] == "0") {
@@ -100,7 +107,43 @@
                 td.id = 'qbanktd';
                 td.appendChild(document.createTextNode(tablerows[j].innerHTML));
             }
+            var td2 = tr.insertCell();
+            td2.id = 'qbanktd';
+            var field = document.createElement("INPUT");
+            field.style.width = "3em";
+            field.style.textAlign = "center";
+            field.value = 0;
+            field.oninput = function() {
+                // alert("hello");
+                var total = 0;
+                for (var i=1, row; row = questionarea.rows[i]; i++){
+                    val = row.cells[5].childNodes[0].value;
+                    total += parseInt(val);
+                }
+                pointtotal.innerHTML = total;
+            };
+            td2.appendChild(field);
+            var deltd = tr.insertCell();
+            deltd.id = 'qbanktd';
+            deltd.innerHTML = "<button onclick=\"revertRow(this)\" style=\"width: 3em\">-</button>";
             document.getElementById("qbanktable").deleteRow(i);
+        }
+
+        function revertRow(r){
+            // TODO make it so that it inserts back into the question bank into the right row
+            var i = r.parentNode.parentNode.rowIndex;
+            var tablerows = r.parentNode.parentNode.children;
+            var tr = document.getElementById("qbanktable").insertRow();
+            for (var j=0; j < 5; j++){
+                var td = tr.insertCell();
+                td.id = 'qbanktd';
+                td.appendChild(document.createTextNode(tablerows[j].innerHTML));
+            }
+            var addtd = tr.insertCell();
+            addtd.id = 'qbanktd';
+            addtd.innerHTML = "<button onclick=\"deleteRow(this)\" style=\"width: 3em\">+</button>";
+            document.getElementById("qbanktable").insertRow();
+            questionarea.deleteRow(i);
         }
 
         submit.addEventListener('click', function (){
@@ -113,7 +156,8 @@
             var q_v = {};
             for (var i=1, row; row = questionarea.rows[i]; i++){
                 q_num = row.cells[0].childNodes[0].nodeValue;
-                q_v[i] = {"q_num": q_num};
+                value = row.cells[5].childNodes[0].value;
+                q_v[i] = {"q_num": q_num, "value": value};
             }
 
             var t_num = document.getElementById("t_num");
