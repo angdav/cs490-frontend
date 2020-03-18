@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Exam</title>
+</head>
+<link rel="stylesheet" href='index.css'/>
+
+<body id="body">
+    <select id="exam">
+        <option value="empty" selected="selected">Choose Exam</option>
+    </select>
+    
+    <br><br><br>
+    <button id="submit" type="button">Submit</button>
+    
+    <script src="auth.js"></script>
+    <script>
+        checkauth(1);
+        // TODO send a prof, i get back all the exams that prof made
+        // then, create a choice input of those exams, and grade the exam upon choice
+
+        var profname = getusername();
+
+        var finalJSON = {
+            "action": "chooseexamtorelease",
+            "prof": profname
+        };
+
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.onreadystatechange = function() {
+            if (this.readyState == 4){
+                alert(this.responseText);
+                // TODO fill the choice input with the exam choices, and then send the selected choice to camilo
+            }
+        };
+        xhttp2.open("POST", "chooseexamtograde.php", true);
+        xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp2.send("req="+JSON.stringify(finalJSON));
+
+        var submit = document.getElementById('submit');
+        submit.addEventListener('click', function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4){
+                    alert(this.responseText);
+                    // releaseexams(); I DON"T THINK THIS IS NECESSARY, JUST NEED TO INDICATE TEST TO CAM AND THATS IT
+                }
+            };
+            xhttp.open("POST", "releaseexam.php", true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send("req="+document.getElementById('exam').value);
+        });
+
+        function releaseexams(){
+            // TODO send exam to cam that will set flag so that students can view the exam
+        }
+    </script>
+</body>
+</html>

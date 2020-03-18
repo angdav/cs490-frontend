@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Exam</title>
+</head>
+<link rel="stylesheet" href='index.css'/>
+
+<body id="body">
+    <select id="exam">
+        <option value="empty" selected="selected">Choose Exam</option>
+    </select>
+    
+    <br><br><br>
+    <button id="submit" type="button">Submit</button>
+    
+    <script src="auth.js"></script>
+    <script>
+        checkauth(2);
+        // TODO send a student, i get back all the exams that student can view
+        // then, create a choice input of those exams, and view the exam upon choice
+
+        var studentname = getusername();
+
+        var finalJSON = {
+            "action": "chooseexamtoview",
+            "student": studentname
+        };
+
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.onreadystatechange = function() {
+            if (this.readyState == 4){
+                alert(this.responseText);
+                // TODO fill the choice input with the exam choices, and then send the selected choice to camilo
+            }
+        };
+        xhttp2.open("POST", "chooseexamtoview.php", true);
+        xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp2.send("req="+JSON.stringify(finalJSON));
+
+        var submit = document.getElementById('submit');
+        submit.addEventListener('click', function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4){
+                    alert(this.responseText);
+                    viewexam();
+                }
+            };
+            xhttp.open("POST", "viewexam.php", true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send("req="+document.getElementById('exam').value);
+        });
+
+        function viewexam(){
+            // TODO clear the page, set with exam-viewing html
+        }
+    </script>
+</body>
+</html>

@@ -11,6 +11,12 @@
 <body id="body">
     <table>
         <tr>
+            <td><button id="chooseexamtotake" type="button">Take Exam</button></td>
+        </tr>
+        <tr>
+            <td><button id="chooseexamtoview" type="button">View Exam</button></td>
+        </tr>
+        <tr>
             <td><button id="logout" type="button">Logout</button></td>
         </tr>
     </table>
@@ -20,9 +26,19 @@
         checkauth(2);
 
         var logoutbutton = document.getElementById('logout');
+        var chooseexamtotake = document.getElementById('chooseexamtotake');
+        var chooseexamtoview = document.getElementById('chooseexamtoview');
 
         logoutbutton.addEventListener('click', function(){
             logout();
+        });
+
+        chooseexamtotake.addEventListener('click', function(){
+            window.location.href = "chooseexamtotake.html";
+        });
+
+        chooseexamtoview.addEventListener('click', function(){
+            window.location.href = "chooseexamtoview.html";
         });
 
     </script>

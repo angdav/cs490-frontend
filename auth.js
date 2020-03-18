@@ -31,3 +31,11 @@ async function logout(){
     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhttp.send();
 }
+
+async function getusername(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "getusername.php", false);
+    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhttp.send();
+    return xhttp.responseText;
+}

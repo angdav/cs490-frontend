@@ -20,6 +20,9 @@
             <td><button id="gradeexam" type="button">Grade Exam</button></td>
         </tr>
         <tr>
+            <td><button id="releaseexam" type="button">Release Exam</button></td>
+        </tr>
+        <tr>
             <td><button id="logout" type="button">Logout</button></td>
         </tr>
     </table>
@@ -31,6 +34,7 @@
         var addquestion = document.getElementById('addquestion');
         var createexam = document.getElementById('createexam');
         var gradeexam = document.getElementById('gradeexam');
+        var releaseexam = document.getElementById('releaseexam');
         var logoutbutton = document.getElementById('logout');
 
         addquestion.addEventListener('click', function(){
@@ -40,7 +44,10 @@
             window.location.href = "createexam.html";
         });
         gradeexam.addEventListener('click', function(){
-            window.location.href = "gradeexam.html";
+            window.location.href = "chooseexamtograde.html";
+        });
+        releaseexam.addEventListener('click', function(){
+            window.location.href = "chooseexamtorelease.html";
         });
         logoutbutton.addEventListener('click', function(){
             logout();

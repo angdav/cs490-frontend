@@ -163,6 +163,7 @@
             var t_num = document.getElementById("t_num");
 
             var finalJSON = {
+                "action": "createexam",
                 "professor": profname,
                 "t_num": t_num.value, 
                 "q_c": questionarea.rows.length - 1,
@@ -179,14 +180,6 @@
             xhttp2.open("POST", "createexam.php", true);
             xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhttp2.send("req="+JSON.stringify(finalJSON));
-        }
-
-        function getusername(){
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "getusername.php", false);
-            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send();
-            return xhttp.responseText;
         }
 
     </script>
