@@ -12,10 +12,10 @@ function curl($url) {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, "req=".$req);
     $output = curl_exec($ch);
-    return json_decode($output);
+    return $output;
 }
 
-$url = "https://web.njit.edu/~co77/cs490/beta/????.php"; // TODO, change to what link camilo wants
+$url = "https://web.njit.edu/~mba27/cs490/relay.php";
 $json = curl($url);
 
 echo $json;

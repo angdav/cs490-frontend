@@ -15,7 +15,7 @@ function curl($url) {
     return json_decode($output);
 }
 
-$url = "https://web.njit.edu/~co77/cs490/beta/upload_question.php";
+$url = "https://web.njit.edu/~mba27/cs490/relay.php";
 $json = curl($url);
 
 echo $json->status . $json->message;

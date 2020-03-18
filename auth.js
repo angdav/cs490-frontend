@@ -32,7 +32,7 @@ async function logout(){
     xhttp.send();
 }
 
-async function getusername(){
+function getusername(){
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "getusername.php", false);
     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

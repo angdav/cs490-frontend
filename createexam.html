@@ -152,6 +152,7 @@
 
         function addexam(){
             var profname = getusername();
+            alert("profname" + profname);
 
             var q_v = {};
             for (var i=1, row; row = questionarea.rows[i]; i++){
@@ -164,10 +165,12 @@
 
             var finalJSON = {
                 "action": "createexam",
-                "professor": profname,
-                "t_num": t_num.value, 
-                "q_c": questionarea.rows.length - 1,
-                "q_v": q_v
+                "contents": {
+                    "professor": profname,
+                    "t_num": t_num.value, 
+                    "q_c": questionarea.rows.length - 1,
+                    "q_v": q_v
+                }
             };
             
             var xhttp2 = new XMLHttpRequest();

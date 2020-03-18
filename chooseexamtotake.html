@@ -22,58 +22,113 @@
         // then, create a choice input of those exams, and take the exam upon choice
 
         var studentname = getusername();
+        var examchoice = document.getElementById('exam');
 
         var finalJSON = {
             "action": "chooseexamtotake",
-            "student": studentname
+            "contents": {
+                "username": studentname
+            }
         };
 
-        getexamchoices();
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.onreadystatechange = function() {
+            if (this.readyState == 4){
+                var msgs = JSON.parse(this.responseText).message;
 
-        function getexamchoices(){
-            var xhttp2 = new XMLHttpRequest();
-            xhttp2.onreadystatechange = function() {
-                if (this.readyState == 4){
-                    alert(this.responseText);
-                    // TODO fill the choice input with the exam choices, and then send the selected choice to camilo
+                for (var i=1; i <= msgs.count; i++){
+                    var test = "notsetyet";
+                    if (msgs[i]['t_num'] == "0"){
+                        test = "Midterm 1";
+                    } else if (msgs[i]['t_num'] == "1"){
+                        test = "Midterm 2";
+                    } else if (msgs[i]['t_num'] == "2"){
+                        test = "Final Exam";
+                    }
+                    examchoice.innerHTML += "<option value=\"" + msgs[i]['t_num'] + "\">" + test + "</option>";
                 }
-            };
-            xhttp2.open("POST", "chooseexamtotake.php", true);
-            xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp2.send("req="+JSON.stringify(finalJSON));
-        }
+            }
+        };
+        xhttp2.open("POST", "chooseexamtotake.php", true);
+        xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp2.send("req="+JSON.stringify(finalJSON));
 
         var submit = document.getElementById('submit');
         submit.addEventListener('click', function() {
+            var finalJSON = {
+                "action": "takeexam",
+                "contents": {
+                    "student": studentname,
+                    "t_num": examchoice.value
+                }
+            };
+
+            console.log(JSON.stringify(finalJSON));
+
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    alert(this.responseText);
-                    takeandsubmitexam();
+                    takeandsubmitexam(this.responseText);
                 }
             };
             xhttp.open("POST", "takeexam.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send("req="+document.getElementById('exam').value);
+            xhttp.send("req="+JSON.stringify(finalJSON));
         });
 
-        function takeandsubmitexam(){
-            // TODO clear the page, set with exam-taking html
+        function takeandsubmitexam(data){
 
-            var finalJSON = {
-                "action": "submitexam"
-                // REST OF THE TAKEN TEST DATA
-            };
+            var body = document.getElementById('body');
 
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4){
-                    alert(this.responseText);
+            body.innerHTML = "";
+
+            var msgs = JSON.parse(data).message;
+            console.log(msgs.count);
+            var testdata = msgs['test_data'];
+
+            var table = document.createElement('table');
+            table.id = 'questions';
+            for (var i=1; i <= testdata['question_c']; i++){
+                var tr = table.insertRow();
+                var td = tr.insertCell();
+                td.innerHTML += "<h1>" + msgs[i]['name'] + "</h1>";
+                td.innerHTML += "<h3>" + msgs[i]['question'] + "</h3><br>";
+                td.innerHTML += "<textarea type=\"text\" placeholder=\"Enter Answer Here\" style=\"max-width: 80%\" onkeydown=\"if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}\"></textarea>";
+            }
+            body.appendChild(table);
+
+            body.innerHTML += "<button id=\"submit\" type=\"button\">Submit</button>"
+
+            var submitbutton = document.getElementById("submit");
+            submitbutton.addEventListener('click', function(){
+
+                var questions = document.getElementById("questions");
+
+                var finalJSON = {
+                    "action": "submitexam",
+                    "contents": {
+                        "student": studentname,
+                        "t_num": testdata['t_num']
+                    }
+                };
+                for (var i=0, row; row = questions.rows[i]; i++){
+                    var code = row.cells[0].childNodes[3].value;
+                    finalJSON['contents'][i+1] = {"q_num": msgs[i+1]['q_num'], "code": code}
                 }
-            };
-            xhttp.open("POST", "submitexam.php", true);
-            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send("req="+finalJSON);
+
+                console.log(finalJSON);
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4){
+                        alert(this.responseText);
+                    }
+                };
+                xhttp.open("POST", "submitexam.php", true);
+                xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhttp.send("req="+finalJSON);
+
+            });
         }
     </script>
 </body>
