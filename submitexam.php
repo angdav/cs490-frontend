@@ -12,10 +12,11 @@ function curl($url) {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, "req=".$req);
     $output = curl_exec($ch);
+    echo "BEFORE DECODE: ".$output;
     return json_decode($output);
 }
 
-$url = "https://web.njit.edu/~co77/cs490/beta/????.php"; // TODO, change to what link camilo wants; THIS WILL SEND THE TAKEN EXAM NAME AND PUT IT INTO THE DATABASE
+$url = "https://web.njit.edu/~mba27/cs490/relay.php";
 $json = curl($url);
 
 echo $json;

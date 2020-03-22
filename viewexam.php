@@ -12,10 +12,10 @@ function curl($url) {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, "req=".$req); // this should send all info needed to get a certain exam the student took
     $output = curl_exec($ch);
-    return json_decode($output);
+    return $output;
 }
 
-$url = "https://web.njit.edu/~co77/cs490/beta/????.php"; // TODO, change to what link camilo wants; THIS WILL RETURN A GRADED EXAM, WHICH THE STUDENT CHOSE
+$url = "https://web.njit.edu/~mba27/cs490/relay.php"; // TODO, change to what link camilo wants; THIS WILL RETURN A GRADED EXAM, WHICH THE STUDENT CHOSE
 $json = curl($url);
 
 echo $json;

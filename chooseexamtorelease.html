@@ -7,13 +7,15 @@
 </head>
 <link rel="stylesheet" href='index.css'/>
 
+<button id="back" style="float: left">Back to Main Screen</button><br><br><br><br><br>
 <body id="body">
+
     <select id="exam">
         <option value="empty" selected="selected">Choose Exam</option>
     </select>
     
     <br><br><br>
-    <button id="submit" type="button">Submit</button>
+    <button id="submit" type="button">Release Exam</button>
     
     <script src="auth.js"></script>
     <script>
@@ -22,16 +24,36 @@
         // then, create a choice input of those exams, and grade the exam upon choice
 
         var profname = getusername();
+        var examchoice = document.getElementById('exam');
+
+        var back = document.getElementById('back');
+        back.addEventListener('click', function(){
+            window.location.href = "profmain.html";
+        });
 
         var finalJSON = {
             "action": "chooseexamtorelease",
-            "prof": profname
+            "contents": {
+                "username": profname
+            }
         };
 
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
-                alert(this.responseText);
+                var msgs = JSON.parse(this.responseText).message;
+
+                for (var i=1; i <= msgs.count; i++){
+                    var test = "notsetyet";
+                    if (msgs[i]['t_num'] == "0"){
+                        test = "Midterm 1";
+                    } else if (msgs[i]['t_num'] == "1"){
+                        test = "Midterm 2";
+                    } else if (msgs[i]['t_num'] == "2"){
+                        test = "Final Exam";
+                    }
+                    examchoice.innerHTML += "<option value=\"" + msgs[i]['t_num'] + "\">" + test + "</option>";
+                }
                 // TODO fill the choice input with the exam choices, and then send the selected choice to camilo
             }
         };
@@ -41,21 +63,26 @@
 
         var submit = document.getElementById('submit');
         submit.addEventListener('click', function() {
+            var finalJSON = {
+                "action": "releaseexam",
+                "contents": {
+                    "professor": profname,
+                    "t_num": document.getElementById('exam').value
+                }
+            };
+
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
                     alert(this.responseText);
-                    // releaseexams(); I DON"T THINK THIS IS NECESSARY, JUST NEED TO INDICATE TEST TO CAM AND THATS IT
+                    window.location.href = "profmain.html";
                 }
             };
             xhttp.open("POST", "releaseexam.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send("req="+document.getElementById('exam').value);
+            xhttp.send("req="+JSON.stringify(finalJSON));
         });
-
-        function releaseexams(){
-            // TODO send exam to cam that will set flag so that students can view the exam
-        }
+        
     </script>
 </body>
 </html>

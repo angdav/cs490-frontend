@@ -7,6 +7,7 @@
 </head>
 <link rel="stylesheet" href='index.css'/>
 
+<button id="back" style="float: left">Back to Main Screen</button><br><br><br><br><br>
 <body id="body">
     <select id="exam">
         <option value="empty" selected="selected">Choose Exam</option>
@@ -23,6 +24,11 @@
 
         var studentname = getusername();
         var examchoice = document.getElementById('exam');
+
+        var back = document.getElementById('back');
+        back.addEventListener('click', function(){
+            window.location.href = "studentmain.html";
+        });
 
         var finalJSON = {
             "action": "chooseexamtotake",
@@ -68,6 +74,7 @@
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
+                    console.log(JSON.parse(this.responseText));
                     takeandsubmitexam(this.responseText);
                 }
             };
@@ -81,6 +88,7 @@
             var body = document.getElementById('body');
 
             body.innerHTML = "";
+            body.innerHTML += "<button id=\"back\" style=\"float: left\">Back to Main Screen</button><br><br><br><br><br>";
 
             var msgs = JSON.parse(data).message;
             console.log(msgs.count);
@@ -97,7 +105,11 @@
             }
             body.appendChild(table);
 
-            body.innerHTML += "<button id=\"submit\" type=\"button\">Submit</button>"
+            body.innerHTML += "<button id=\"submit\" type=\"button\">Submit</button>";
+
+            document.getElementById('back').addEventListener('click', function(){
+                window.location.href = "studentmain.html";
+            });
 
             var submitbutton = document.getElementById("submit");
             submitbutton.addEventListener('click', function(){
@@ -108,15 +120,25 @@
                     "action": "submitexam",
                     "contents": {
                         "student": studentname,
-                        "t_num": testdata['t_num']
+                        "t_num": testdata['t_num'],
+                        "q_count": testdata['question_c']
                     }
                 };
                 for (var i=0, row; row = questions.rows[i]; i++){
                     var code = row.cells[0].childNodes[3].value;
-                    finalJSON['contents'][i+1] = {"q_num": msgs[i+1]['q_num'], "code": code}
+                    var med = JSON.parse(testdata['question_v']);
+                    finalJSON['contents'][i+1] = {
+                        "q_num": msgs[i+1]['q_num'],
+                        "code": code,
+                        "value": med[i+1]['value'],
+                        "test_c": msgs[i+1]['test_c'],
+                        "test_v": JSON.parse(msgs[i+1]['test_v']),
+                        "question": msgs[i+1]['question']
+                    };
                 }
 
                 console.log(finalJSON);
+                console.log(JSON.stringify(finalJSON));
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
@@ -126,7 +148,7 @@
                 };
                 xhttp.open("POST", "submitexam.php", true);
                 xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xhttp.send("req="+finalJSON);
+                xhttp.send("req="+JSON.stringify(finalJSON));
 
             });
         }

@@ -7,6 +7,7 @@
 </head>
 <link rel="stylesheet" href='index.css'/>
 
+<button id="back" style="float: left">Back to Main Screen</button><br><br><br><br><br>
 <body id="body">
     <select id="exam">
         <option value="empty" selected="selected">Choose Exam</option>
@@ -22,39 +23,112 @@
         // then, create a choice input of those exams, and view the exam upon choice
 
         var studentname = getusername();
+        var examchoice = document.getElementById('exam');
+
+        var back = document.getElementById('back');
+        back.addEventListener('click', function(){
+            window.location.href = "studentmain.html";
+        });
 
         var finalJSON = {
             "action": "chooseexamtoview",
-            "student": studentname
+            "contents": {
+                "username": studentname
+            }
         };
 
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
-                alert(this.responseText);
+                // alert(this.responseText);
+
+                var msgs = JSON.parse(this.responseText).message;
+
+                for (var i=1; i <= msgs.count; i++){
+                    var test = "notsetyet";
+                    if (msgs[i]['t_num'] == "0"){
+                        test = "Midterm 1";
+                    } else if (msgs[i]['t_num'] == "1"){
+                        test = "Midterm 2";
+                    } else if (msgs[i]['t_num'] == "2"){
+                        test = "Final Exam";
+                    }
+                    examchoice.innerHTML += "<option value=\"" + msgs[i]['t_num'] + "\">" + test + "</option>";
+                }
                 // TODO fill the choice input with the exam choices, and then send the selected choice to camilo
             }
         };
-        xhttp2.open("POST", "chooseexamtoview.php", true);
+        xhttp2.open("POST", "chooseexamtograde.php", true);
         xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhttp2.send("req="+JSON.stringify(finalJSON));
 
         var submit = document.getElementById('submit');
         submit.addEventListener('click', function() {
+            var finalJSON = {
+                "action": "viewexam",
+                "contents": {
+                    "username": studentname,
+                    "t_num": document.getElementById('exam').value
+                }
+            }
+
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    alert(this.responseText);
-                    viewexam();
+                    viewexam(this.responseText);
                 }
             };
             xhttp.open("POST", "viewexam.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send("req="+document.getElementById('exam').value);
+            xhttp.send("req="+JSON.stringify(finalJSON));
         });
 
-        function viewexam(){
-            // TODO clear the page, set with exam-viewing html
+        function viewexam(data){
+            var body = document.getElementById('body');
+
+            body.innerHTML = "";
+            body.innerHTML += "<button id=\"back\" style=\"float: left\">Back to Main Screen</button><br><br><br><br><br>";
+            console.log(JSON.parse(data));
+
+            var json = JSON.parse(data);
+            var questions = JSON.parse(json['message']['student_data']['question_v'].replace(/\n/g, "\\n").replace(/\t/g, "\\t"));
+            var question_c = json['message']['student_data']['question_c'];
+
+            var table = document.createElement('table');
+            table.id = 'questions';
+            table.style = 'width: 80%';
+            for (var i=1; i <= question_c; i++){
+                var tr = table.insertRow();
+                var td = tr.insertCell();
+                td.innerHTML += "<h1>Question " + i + "</h1>";
+                td.innerHTML += "<h3>" + json['message'][i]['question'] + "</h3><br>";
+                td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + questions[i]['answer'] + "</textarea>";
+                td.innerHTML += "<br><input readonly id=\"qscore\" style=\"width: 3em\" value=\"" + questions[i]['score'] + "\"> out of " + questions[i]['max'];
+                td.innerHTML += "<br><br>Comments: ";
+                td.innerHTML += "<br><textarea readonly type=\"text\" style=\"max-width: 80%\">" + questions[i]['comment'] + "</textarea><br><br>";
+            }
+            body.appendChild(table);
+
+            var totalscore = document.createElement('div');
+            totalscore.id = "iscoretext";
+            totalscore.style = "font-size: 2em";
+            totalscore.innerHTML = json['message']['student_data']['score'];
+
+            var totscoretext = document.createElement('div');
+            totscoretext.id = "totscoretext";
+            totscoretext.innerHTML = "Total Score: ";
+
+            var outoftext = document.createElement('div');
+            outoftext.id = "outoftext";
+            outoftext.innerHTML = " out of " + json['message']['student_data']['max'];
+
+            body.appendChild(totscoretext);
+            body.appendChild(totalscore);
+            body.appendChild(outoftext);
+            
+            document.getElementById('back').addEventListener('click', function(){
+                window.location.href = "studentmain.html";
+            });
         }
     </script>
 </body>

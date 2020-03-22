@@ -52,13 +52,19 @@
                 if (this.readyState == 4){
                     result.style.display = 'inline-block';
                     loading.style.display = 'none';
-                    document.getElementById("result").innerHTML = this.responseText;
+                    // document.getElementById("result").innerHTML = this.responseText;
                     if (this.responseText.includes("Professor")){
-                        window.location.href = "profmain.html";
+                        loading.style.display = 'inline-block';
                         setauth(1, user);
+                        setTimeout(function(){
+                            window.location.href = "profmain.html";
+                        }, 500);
                     } else if (this.responseText.includes("Student")){
-                        window.location.href = "studentmain.html";
+                        loading.style.display = 'inline-block';
                         setauth(2, user);
+                        setTimeout(function(){
+                            window.location.href = "studentmain.html";
+                        }, 500);
                     }
                 }
             };

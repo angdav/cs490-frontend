@@ -121,10 +121,14 @@ textarea {
 #loading {
     display: none;
     margin-top: 50px;
-    border-top: 8px solid #779ecb;
+    border-top: 8px solid #aaa;
+    border-left: 8px solid #222;
+    border-right: 8px solid #222;
+    border-bottom: 8px solid #222;
+    /* border-top: 8px solid #779ecb;
     border-left: 8px solid #ff6961;
     border-right: 8px solid #d3d341;
-    border-bottom: 8px solid #3ae96f;
+    border-bottom: 8px solid #3ae96f; */
     border-radius: 50%;
     width: 100px;
     height: 100px;

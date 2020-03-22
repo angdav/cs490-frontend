@@ -8,6 +8,7 @@
 
 <link rel="stylesheet" href='index.css'/>
 
+<button id="back" style="float: left">Back to Main Screen</button><br><br><br><br><br>
 <body id="body">
     <div id="mainbody" style="float: left; width: 50%; max-width: 50%">
         <table style="width: 80%; max-width: 80%;">
@@ -46,9 +47,31 @@
     </div>
     <div id="questionbank" style="float: right; width: 50%">
         <h1>Question Bank</h1>
+        <input type="text" id="myInput" onkeyup="filter()" placeholder="Search for names..">
+        <div style="display: inline-block">
+            <div>Difficulty Filter:</div><select id="difficultySelect" onchange="filter()">
+                <option value="empty" selected="selected"></option>
+                <option value="0">Easy</option>
+                <option value="1">Medium</option>
+                <option value="2">Hard</option>
+            </select>
+        </div>
+        <div style="display: inline-block">
+            <div>Category Filter:</div><select id="categorySelect" onchange="filter()">
+                <option value="empty" selected="selected"></option>
+                <option>Variables</option>
+                <option>Operators</option>
+                <option>Functions</option>
+                <option>Classes</option>
+                <option>Loops</option>
+                <option>Turtle</option>
+            </select>
+        </div>
+        <br><br><br>
     </div>
 
     <script src="auth.js"></script>
+    <script src="filter.js"></script>
     <script>
         checkauth(1);
 
@@ -58,6 +81,11 @@
         var questionarea = document.getElementById("questionarea");
         var questionbank = document.getElementById("questionbank");
         var pointtotal = document.getElementById("pointtotal");
+        
+        var back = document.getElementById('back');
+        back.addEventListener('click', function(){
+            window.location.href = "profmain.html";
+        });
 
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = function() {
@@ -105,7 +133,7 @@
             for (var j=0; j < header.length; j++){
                 var td = tr.insertCell();
                 td.id = 'qbanktd';
-                td.appendChild(document.createTextNode(tablerows[j].innerHTML));
+                td.appendChild(document.createTextNode(escapeHtml(tablerows[j].innerHTML)));
             }
             var td2 = tr.insertCell();
             td2.id = 'qbanktd';
@@ -114,7 +142,6 @@
             field.style.textAlign = "center";
             field.value = 0;
             field.oninput = function() {
-                // alert("hello");
                 var total = 0;
                 for (var i=1, row; row = questionarea.rows[i]; i++){
                     val = row.cells[5].childNodes[0].value;
@@ -127,23 +154,24 @@
             deltd.id = 'qbanktd';
             deltd.innerHTML = "<button onclick=\"revertRow(this)\" style=\"width: 3em\">-</button>";
             document.getElementById("qbanktable").deleteRow(i);
+            filter();
         }
 
         function revertRow(r){
-            // TODO make it so that it inserts back into the question bank into the right row
             var i = r.parentNode.parentNode.rowIndex;
             var tablerows = r.parentNode.parentNode.children;
             var tr = document.getElementById("qbanktable").insertRow();
             for (var j=0; j < 5; j++){
                 var td = tr.insertCell();
                 td.id = 'qbanktd';
-                td.appendChild(document.createTextNode(tablerows[j].innerHTML));
+                td.appendChild(document.createTextNode(escapeHtml(tablerows[j].innerHTML)));
             }
             var addtd = tr.insertCell();
             addtd.id = 'qbanktd';
             addtd.innerHTML = "<button onclick=\"deleteRow(this)\" style=\"width: 3em\">+</button>";
             document.getElementById("qbanktable").insertRow();
             questionarea.deleteRow(i);
+            filter();
         }
 
         submit.addEventListener('click', function (){
@@ -152,7 +180,6 @@
 
         function addexam(){
             var profname = getusername();
-            alert("profname" + profname);
 
             var q_v = {};
             for (var i=1, row; row = questionarea.rows[i]; i++){
@@ -172,19 +199,20 @@
                     "q_v": q_v
                 }
             };
+
+            console.log(finalJSON);
             
             var xhttp2 = new XMLHttpRequest();
             xhttp2.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    console.log(JSON.stringify(finalJSON));
                     alert(this.responseText);
+                    // window.location.href = "profmain.html";
                 }
             };
             xhttp2.open("POST", "createexam.php", true);
             xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhttp2.send("req="+JSON.stringify(finalJSON));
         }
-
     </script>
 </body>
 </html>
