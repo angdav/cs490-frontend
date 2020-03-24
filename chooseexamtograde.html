@@ -17,10 +17,9 @@
     <button id="submit" type="button">Submit</button>
     
     <script src="auth.js"></script>
+    <script src="filter.js"></script>
     <script>
         checkauth(1);
-        // TODO send a prof, i get back all the exams that prof made
-        // then, create a choice input of those exams, and grade the exam upon choice
 
         var profname = getusername();
         var examchoice = document.getElementById('exam');
@@ -36,9 +35,6 @@
                 "username": profname
             }
         };
-
-        console.log(finalJSON);
-        console.log(JSON.stringify(finalJSON));
 
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = function() {
@@ -57,10 +53,9 @@
                     }
                     examchoice.innerHTML += "<option value=\"" + msgs[i]['t_num'] + "\">" + test + "</option>";
                 }
-                // TODO fill the choice input with the exam choices, and then send the selected choice to camilo
             }
         };
-        xhttp2.open("POST", "chooseexamtograde.php", true);
+        xhttp2.open("POST", "relay.php", true);
         xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhttp2.send("req="+JSON.stringify(finalJSON));
 
@@ -77,19 +72,15 @@
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    // alert(this.responseText);
                     gradeandsubmitexams(this.responseText, document.getElementById('exam').value);
                 }
             };
-            xhttp.open("POST", "gradeexam.php", true);
+            xhttp.open("POST", "relay.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhttp.send("req="+JSON.stringify(finalJSON));
         });
 
         function gradeandsubmitexams(data, examnum){
-            // TODO clear the page, set with exam-grading html
-            // this will use a dropdown with all the taken exams, and update the html based on which is selected
-            // once the exam is graded, it will submit based on selected exam
 
             var body = document.getElementById('body');
 
@@ -141,12 +132,9 @@
                     }
                 };
 
-                console.log(finalJSON);
-
                 var xhttp3 = new XMLHttpRequest();
                 xhttp3.onreadystatechange = function() {
                     if (this.readyState == 4){
-                        // alert(this.responseText);
                         var json = JSON.parse(this.responseText);
                         var questions = JSON.parse(json['message']['student_data']['question_v'].replace(/\n/g, "\\n").replace(/\t/g, "\\t"));
                         var question_c = json['message']['student_data']['question_c'];
@@ -158,11 +146,11 @@
                             var tr = table.insertRow();
                             var td = tr.insertCell();
                             td.innerHTML += "<h1>Question " + i + "</h1>";
-                            td.innerHTML += "<h3>" + json['message'][i]['question'] + "</h3><br>";
-                            td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + questions[i]['answer'] + "</textarea>";
+                            td.innerHTML += "<h3>" + escapeHtmlReverse(json['message'][i]['question']) + "</h3><br>";
+                            td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + escapeHtmlReverse(questions[i]['answer']) + "</textarea>";
                             td.innerHTML += "<br><input id=\"qscore\" style=\"width: 3em\" value=\"" + questions[i]['score'] + "\"> out of " + questions[i]['max'];
                             td.innerHTML += "<br><br>Comments: ";
-                            td.innerHTML += "<br><textarea type=\"text\" style=\"max-width: 80%\">" + questions[i]['comment'] + "</textarea><br><br>";
+                            td.innerHTML += "<br><textarea type=\"text\" style=\"max-width: 80%\">" + escapeHtmlReverse(questions[i]['comment']) + "</textarea><br><br>";
                         }
                         body.appendChild(table);
 
@@ -206,10 +194,8 @@
 
                             var studentData = json['message']['student_data'];
 
-
                             var qs = {};
                             for (var i=0, row; row = table.rows[i]; i++){
-                                console.log(row.cells[0]);
                                 var q_num = json['message'][i+1]['q_num'];
                                 var answer = questions[i+1]['answer'];
                                 var comment = row.cells[0].childNodes[11].value;
@@ -230,25 +216,22 @@
                                 }
                             };
 
-                            console.log(finalJSON);
-                            console.log(JSON.stringify(finalJSON));
-
                             var xhttp = new XMLHttpRequest();
                             xhttp.onreadystatechange = function() {
                                 if (this.readyState == 4){
-                                    alert(this.responseText);
+                                    alert(JSON.parse(this.responseText).message);
                                 }
                             };
-                            xhttp.open("POST", "finishedexam.php", true);
+                            xhttp.open("POST", "relay.php", true);
                             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                            xhttp.send("req="+JSON.stringify(finalJSON));
+                            xhttp.send("req="+encodeURIComponent(JSON.stringify(finalJSON)));
                         });
 
                     }
                 };
-                xhttp3.open("POST", "getstudentchoice.php", true);
+                xhttp3.open("POST", "relay.php", true);
                 xhttp3.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xhttp3.send("req="+JSON.stringify(finalJSON));
+                xhttp3.send("req="+encodeURIComponent(JSON.stringify(finalJSON)));
             });
         }
     </script>

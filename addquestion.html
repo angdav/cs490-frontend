@@ -40,10 +40,21 @@
             </tr>
 
             <table id="argtable">
-                <h3>Arguments</h3></table>
+                <h3>Arguments</h3>
+                <tr>
+                    <td><input type="text" placeholder="Argument name"/></td><td><input type="textarea" placeholder="Description"/></td>
+                </tr>
+            </table>
 
             <table id="testcasetable">
-                <h3>Test cases</h3></table>
+                <h3>Test cases</h3>
+                <tr>
+                    <td><input type="text" placeholder="Input"/></td><td><input type="text" placeholder="Output"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text" placeholder="Input"/></td><td><input type="text" placeholder="Output"/></td>
+                </tr>
+            </table>
 
             <tr>
                 <td><button id="addarg" type="button">Add argument</button></td>
@@ -92,10 +103,8 @@
         var topic = document.getElementById("topic");
         var argtable = document.getElementById("argtable");
         var testcasetable = document.getElementById("testcasetable");
-
         var addarg = document.getElementById("addarg");
         var addtestcase = document.getElementById("addtestcase");
-
         var questionbank = document.getElementById("questionbank");
         
         var back = document.getElementById('back');
@@ -106,10 +115,7 @@
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
-                var response = this.responseText;
-                // alert(response);
-                var msgs = JSON.parse(response).message;
-                console.log(msgs);
+                var msgs = JSON.parse(this.responseText).message;
                 var table = document.createElement('table');
                 table.id = 'qbanktable';
                 table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th></tr>";
@@ -134,9 +140,9 @@
                 questionbank.appendChild(table);
             }
         };
-        xhttp2.open("POST", "qbank.php", true);
+        xhttp2.open("POST", "relay.php", true);
         xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhttp2.send();
+        xhttp2.send("req="+JSON.stringify({"action": "qbank"}));
 
         addarg.addEventListener('click', function(){
             var newRow = argtable.insertRow();
@@ -178,29 +184,24 @@
                     "name": escapeHtmlReverse(questionname.value),
                     "topic": topic.value,
                     "difficulty": difficulty.value,
-                    "question": escapeHtmlReverse(questionprompt.value),
+                    "question": escapeHtml(questionprompt.value).replace("\"", "\'"),
                     "arg_c": arg_c,
                     "arg_v": arg_v,
                     "test_c": test_c,
                     "test_v": test_v
                 }
             };
-
-            console.log("BELOW IS THE JSON");
-            console.log(finalJSON);
             
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
                     var r = JSON.parse(this.responseText);
                     alert(r['message']);
-                    window.location.href = "profmain.html";
                 }
             };
-            xhttp.open("POST", "addquestion.php", true);
+            xhttp.open("POST", "relay.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send("req="+JSON.stringify(finalJSON));
-            console.log(finalJSON);
+            xhttp.send("req="+encodeURIComponent(JSON.stringify(finalJSON)));
         }
 
     </script>

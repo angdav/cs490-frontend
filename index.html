@@ -52,7 +52,6 @@
                 if (this.readyState == 4){
                     result.style.display = 'inline-block';
                     loading.style.display = 'none';
-                    // document.getElementById("result").innerHTML = this.responseText;
                     if (this.responseText.includes("Professor")){
                         loading.style.display = 'inline-block';
                         setauth(1, user);

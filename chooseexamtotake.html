@@ -17,10 +17,9 @@
     <button id="submit" type="button">Submit</button>
     
     <script src="auth.js"></script>
+    <script src="filter.js"></script>
     <script>
         checkauth(2);
-        // TODO send a student, i get back all the exams that student can take
-        // then, create a choice input of those exams, and take the exam upon choice
 
         var studentname = getusername();
         var examchoice = document.getElementById('exam');
@@ -55,7 +54,7 @@
                 }
             }
         };
-        xhttp2.open("POST", "chooseexamtotake.php", true);
+        xhttp2.open("POST", "relay.php", true);
         xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhttp2.send("req="+JSON.stringify(finalJSON));
 
@@ -69,16 +68,13 @@
                 }
             };
 
-            console.log(JSON.stringify(finalJSON));
-
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    console.log(JSON.parse(this.responseText));
                     takeandsubmitexam(this.responseText);
                 }
             };
-            xhttp.open("POST", "takeexam.php", true);
+            xhttp.open("POST", "relay.php", true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhttp.send("req="+JSON.stringify(finalJSON));
         });
@@ -91,7 +87,6 @@
             body.innerHTML += "<button id=\"back\" style=\"float: left\">Back to Main Screen</button><br><br><br><br><br>";
 
             var msgs = JSON.parse(data).message;
-            console.log(msgs.count);
             var testdata = msgs['test_data'];
 
             var table = document.createElement('table');
@@ -99,8 +94,8 @@
             for (var i=1; i <= testdata['question_c']; i++){
                 var tr = table.insertRow();
                 var td = tr.insertCell();
-                td.innerHTML += "<h1>" + msgs[i]['name'] + "</h1>";
-                td.innerHTML += "<h3>" + msgs[i]['question'] + "</h3><br>";
+                td.innerHTML += "<h1>" + escapeHtmlReverse(msgs[i]['name']) + "</h1>";
+                td.innerHTML += "<h3>" + escapeHtmlReverse(msgs[i]['question']) + "</h3><br>";
                 td.innerHTML += "<textarea type=\"text\" placeholder=\"Enter Answer Here\" style=\"max-width: 80%\" onkeydown=\"if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}\"></textarea>";
             }
             body.appendChild(table);
@@ -129,26 +124,26 @@
                     var med = JSON.parse(testdata['question_v']);
                     finalJSON['contents'][i+1] = {
                         "q_num": msgs[i+1]['q_num'],
-                        "code": code,
+                        "code": escapeHtml(code),
                         "value": med[i+1]['value'],
                         "test_c": msgs[i+1]['test_c'],
                         "test_v": JSON.parse(msgs[i+1]['test_v']),
+                        "arg_c": msgs[i+1]['arg_c'],
+                        "arg_v": JSON.parse(msgs[i+1]['arg_v']),
                         "question": msgs[i+1]['question']
                     };
                 }
 
-                console.log(finalJSON);
-                console.log(JSON.stringify(finalJSON));
-
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4){
-                        alert(this.responseText);
+                        alert(JSON.parse(this.responseText).message);
+                        window.location.href = "studentmain.html";
                     }
                 };
-                xhttp.open("POST", "submitexam.php", true);
+                xhttp.open("POST", "relay.php", true);
                 xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xhttp.send("req="+JSON.stringify(finalJSON));
+                xhttp.send("req="+encodeURIComponent(JSON.stringify(finalJSON)));
 
             });
         }

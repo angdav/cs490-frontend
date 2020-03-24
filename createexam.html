@@ -14,9 +14,6 @@
         <table style="width: 80%; max-width: 80%;">
             <h1>Create an Exam</h1>
             <tr>
-                <td><input id="examname" name="examname" type="text" placeholder="Exam Name"/></td>
-            </tr>
-            <tr>
                 <td><select id="t_num">
                     <option value="empty" selected="selected">Choose Exam Number</option>
                     <option value="0">Midterm 1</option>
@@ -74,8 +71,6 @@
     <script src="filter.js"></script>
     <script>
         checkauth(1);
-
-        var globalmsgs = 0;
     
         var submit = document.getElementById("submit");
         var questionarea = document.getElementById("questionarea");
@@ -91,10 +86,7 @@
         xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
                 var response = this.responseText;
-                // alert(response);
                 var msgs = JSON.parse(response).message;
-                globalmsgs = msgs;
-                console.log(msgs);
                 var table = document.createElement('table');
                 table.id = 'qbanktable';
                 table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th><th>add</th></tr>";
@@ -122,9 +114,9 @@
                 questionbank.appendChild(table);
             }
         };
-        xhttp2.open("POST", "qbank.php", true);
+        xhttp2.open("POST", "relay.php", true);
         xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhttp2.send();
+        xhttp2.send("req="+JSON.stringify({"action": "qbank"}));
 
         function deleteRow(r){
             var i = r.parentNode.parentNode.rowIndex;
@@ -199,17 +191,15 @@
                     "q_v": q_v
                 }
             };
-
-            console.log(finalJSON);
             
             var xhttp2 = new XMLHttpRequest();
             xhttp2.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    alert(this.responseText);
-                    // window.location.href = "profmain.html";
+                    alert(JSON.parse(this.responseText).message);
+                    window.location.href = "profmain.html";
                 }
             };
-            xhttp2.open("POST", "createexam.php", true);
+            xhttp2.open("POST", "relay.php", true);
             xhttp2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhttp2.send("req="+JSON.stringify(finalJSON));
         }
