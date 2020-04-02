@@ -84,7 +84,7 @@ textarea {
     margin: .25em;
     caret-color: white;
     font-weight: bolder;
-    width: 300px;
+    width: 600px;
     font-size: 1.5em;
     box-shadow:5px 5px #444a;
     animation: fadein 2s;
@@ -92,9 +92,9 @@ textarea {
 
 #questionprompt {
     width: 80%;
-    height: 300px;
+    height: 500px;
     max-width: 90%;
-    min-width: 300px;
+    min-width: 500px;
 }
 
 @keyframes fadein{

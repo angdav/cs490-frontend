@@ -36,7 +36,7 @@
             </tr>
             <br>
             <tr>
-                <h2>Point Total: <div style="display: inline-block" id="pointtotal"></div></h2>
+                <h2>Point Total: <div style="display: inline-block" id="pointtotal">0</div></h2>
             </tr>
         </table>
         <br>
@@ -191,12 +191,16 @@
                     "q_v": q_v
                 }
             };
+
+            console.log(JSON.stringify(finalJSON))
             
             var xhttp2 = new XMLHttpRequest();
             xhttp2.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    alert(JSON.parse(this.responseText).message);
-                    window.location.href = "profmain.html";
+                    showAlert(this.responseText);
+                    setTimeout(function(){
+                        window.location.href = "profmain.html";
+                    }, 2000);
                 }
             };
             xhttp2.open("POST", "relay.php", true);

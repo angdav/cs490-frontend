@@ -85,7 +85,6 @@
 
             body.innerHTML = "";
             body.innerHTML += "<button id=\"back\" style=\"float: left\">Back to Main Screen</button><br><br><br><br><br>";
-
             var json = JSON.parse(data);
             var questions = JSON.parse(json['message']['student_data']['question_v'].replace(/\n/g, "\\n").replace(/\t/g, "\\t"));
             var question_c = json['message']['student_data']['question_c'];
@@ -98,10 +97,10 @@
                 var td = tr.insertCell();
                 td.innerHTML += "<h1>Question " + i + "</h1>";
                 td.innerHTML += "<h3>" + escapeHtmlReverse(json['message'][i]['question']) + "</h3><br>";
-                td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + escapeHtmlReverse(questions[i]['answer']) + "</textarea>";
+                td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['answer']).replace(/\+/g, " ")) + "</textarea>";
                 td.innerHTML += "<br><input readonly id=\"qscore\" style=\"width: 3em\" value=\"" + questions[i]['score'] + "\"> out of " + questions[i]['max'];
                 td.innerHTML += "<br><br>Comments: ";
-                td.innerHTML += "<br><textarea readonly type=\"text\" style=\"max-width: 80%\">" + escapeHtmlReverse(questions[i]['comment']) + "</textarea><br><br>";
+                td.innerHTML += "<br><textarea readonly type=\"text\" style=\"max-width: 80%\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['comment']).replace(/\+/g, " ")) + "</textarea><br><br>";
             }
             body.appendChild(table);
 

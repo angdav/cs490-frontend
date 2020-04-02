@@ -109,6 +109,8 @@
             var submitbutton = document.getElementById("submit");
             submitbutton.addEventListener('click', function(){
 
+                console.log(testdata)
+
                 var questions = document.getElementById("questions");
 
                 var finalJSON = {
@@ -127,18 +129,22 @@
                         "code": escapeHtml(code),
                         "value": med[i+1]['value'],
                         "test_c": msgs[i+1]['test_c'],
-                        "test_v": JSON.parse(msgs[i+1]['test_v']),
+                        "test_v": msgs[i+1]['test_v'],
                         "arg_c": msgs[i+1]['arg_c'],
-                        "arg_v": JSON.parse(msgs[i+1]['arg_v']),
+                        "arg_v": msgs[i+1]['arg_v'],
                         "question": msgs[i+1]['question']
                     };
                 }
 
+                console.log(finalJSON)
+                console.log(JSON.stringify(finalJSON))
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4){
-                        alert(JSON.parse(this.responseText).message);
-                        window.location.href = "studentmain.html";
+                        showAlert(this.responseText);
+                        setTimeout(function(){
+                            window.location.href = "studentmain.html";
+                        }, 2000);
                     }
                 };
                 xhttp.open("POST", "relay.php", true);

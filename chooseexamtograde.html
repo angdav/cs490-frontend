@@ -94,7 +94,6 @@
             });
 
             var msgs = JSON.parse(data).message;
-            console.log(msgs.count);
 
             for (var i=1; i <= msgs.count; i++){
                 studentchoice.innerHTML += "<option value=\"" + msgs[i] + "\">" + msgs[i] + "</option>";
@@ -136,6 +135,8 @@
                 xhttp3.onreadystatechange = function() {
                     if (this.readyState == 4){
                         var json = JSON.parse(this.responseText);
+                        console.log(json)
+                        console.log(json['message']['student_data']['question_v'].replace(/\n/g, "\\n").replace(/\t/g, "\\t"))
                         var questions = JSON.parse(json['message']['student_data']['question_v'].replace(/\n/g, "\\n").replace(/\t/g, "\\t"));
                         var question_c = json['message']['student_data']['question_c'];
 
@@ -147,10 +148,10 @@
                             var td = tr.insertCell();
                             td.innerHTML += "<h1>Question " + i + "</h1>";
                             td.innerHTML += "<h3>" + escapeHtmlReverse(json['message'][i]['question']) + "</h3><br>";
-                            td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + escapeHtmlReverse(questions[i]['answer']) + "</textarea>";
+                            td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['answer']).replace(/\+/g, " ")) + "</textarea>";
                             td.innerHTML += "<br><input id=\"qscore\" style=\"width: 3em\" value=\"" + questions[i]['score'] + "\"> out of " + questions[i]['max'];
                             td.innerHTML += "<br><br>Comments: ";
-                            td.innerHTML += "<br><textarea type=\"text\" style=\"max-width: 80%\">" + escapeHtmlReverse(questions[i]['comment']) + "</textarea><br><br>";
+                            td.innerHTML += "<br><textarea type=\"text\" style=\"max-width: 80%\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['comment']).replace(/\+/g, " ")) + "</textarea><br><br>";
                         }
                         body.appendChild(table);
 
@@ -182,7 +183,6 @@
                             qscores[i].oninput = function() {
                                 var total = 0;
                                 for (var i=0, row; row = document.getElementById('questions').rows[i]; i++){
-                                    console.log(row.cells[0]);
                                     val = row.cells[0].childNodes[5].value;
                                     total += parseInt(val);
                                 }
@@ -197,7 +197,7 @@
                             var qs = {};
                             for (var i=0, row; row = table.rows[i]; i++){
                                 var q_num = json['message'][i+1]['q_num'];
-                                var answer = questions[i+1]['answer'];
+                                var answer = decodeURIComponent(questions[i+1]['answer'].replace(/\+/g, " "));
                                 var comment = row.cells[0].childNodes[11].value;
                                 var iscore = row.cells[0].childNodes[5].value;
                                 var max = questions[i+1]['max'];
@@ -219,7 +219,11 @@
                             var xhttp = new XMLHttpRequest();
                             xhttp.onreadystatechange = function() {
                                 if (this.readyState == 4){
-                                    alert(JSON.parse(this.responseText).message);
+                                    var msg = JSON.parse(this.responseText).message;
+                                    var content = document.createElement("DIV");
+                                    content.style.fontSize = "large";
+                                    content.innerHTML = msg;
+                                    document.getElementById('body').appendChild(content);
                                 }
                             };
                             xhttp.open("POST", "relay.php", true);

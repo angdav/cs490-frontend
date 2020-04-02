@@ -9,5 +9,4 @@ if ($usr != 0){
     $_SESSION['username'] = $username;
 }
 
-
 ?>

@@ -3,15 +3,6 @@
 $user = $_POST["u"];
 $pass = $_POST["p"];
 
-/*
-echo "<br><br>";
-echo "<table id='info'>";
-echo "<caption>INPUT</caption>";
-echo "<tr><td>username</td><td>$user</td></tr>";
-echo "<tr><td>password</td><td>".strlen($pass)." characters</td></tr>";
-echo "</table>";
-*/
-
 function curl($url) {
 
     global $user;

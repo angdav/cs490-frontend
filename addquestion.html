@@ -116,6 +116,7 @@
         xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
                 var msgs = JSON.parse(this.responseText).message;
+                console.log(msgs)
                 var table = document.createElement('table');
                 table.id = 'qbanktable';
                 table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th></tr>";
@@ -181,22 +182,26 @@
             var finalJSON = { 
                 "action": "addquestion",
                 "contents": {
-                    "name": escapeHtmlReverse(questionname.value),
+                    "name": escapeHtml(questionname.value),
                     "topic": topic.value,
                     "difficulty": difficulty.value,
-                    "question": escapeHtml(questionprompt.value).replace("\"", "\'"),
+                    "question": escapeHtml(questionprompt.value),
                     "arg_c": arg_c,
                     "arg_v": arg_v,
                     "test_c": test_c,
                     "test_v": test_v
                 }
             };
+
+            console.log(finalJSON)
             
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    var r = JSON.parse(this.responseText);
-                    alert(r['message']);
+                    showAlert(this.responseText);
+                    setTimeout(function(){
+                        window.location.href = "addquestion.html";
+                    }, 2000);
                 }
             };
             xhttp.open("POST", "relay.php", true);

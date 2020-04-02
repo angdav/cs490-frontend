@@ -46,3 +46,11 @@ function escapeHtmlReverse(unsafe) {
         .replace("\"", "&quot;",)
         .replace("\'", "&#039;", );
 }
+
+function showAlert(text){
+    var msg = JSON.parse(text).message;
+    var content = document.createElement("DIV");
+    content.style.fontSize = "large";
+    content.innerHTML = msg + ". Redirecting...";
+    document.getElementById('body').appendChild(content);
+}
