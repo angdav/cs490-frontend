@@ -96,6 +96,8 @@
     <script>
         checkauth(1);
 
+        var testcaseCount = 2;
+
         var submit = document.getElementById("submit");
         var questionname = document.getElementById("questionname");
         var questionprompt = document.getElementById("questionprompt");
@@ -151,6 +153,10 @@
         });
 
         addtestcase.addEventListener('click', function(){
+            testcaseCount++;
+            if (testcaseCount > 6){
+                return;
+            }
             var newRow = testcasetable.insertRow();
             newRow.innerHTML = '<td><input type="text" placeholder="Input"/></td><td><input type="text" placeholder="Output"/></td>';
         });
