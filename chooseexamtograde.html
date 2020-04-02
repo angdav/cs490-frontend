@@ -223,7 +223,13 @@
                                     var content = document.createElement("DIV");
                                     content.style.fontSize = "large";
                                     content.innerHTML = msg;
+                                    content.id = "alert";
                                     document.getElementById('body').appendChild(content);
+                                    window.scrollTo(0, document.body.scrollHeight);
+                                    setTimeout(function(){
+                                        var elem = document.getElementById('alert');
+                                        elem.parentNode.removeChild(elem);
+                                    }, 2000);
                                 }
                             };
                             xhttp.open("POST", "relay.php", true);

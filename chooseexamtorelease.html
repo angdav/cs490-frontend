@@ -73,6 +73,7 @@
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
                     showAlert(this.responseText);
+                    window.scrollTo(0, document.body.scrollHeight);
                     setTimeout(function(){
                         window.location.href = "profmain.html";
                     }, 2000);

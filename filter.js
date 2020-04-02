@@ -52,5 +52,6 @@ function showAlert(text){
     var content = document.createElement("DIV");
     content.style.fontSize = "large";
     content.innerHTML = msg + " Redirecting...";
+    content.id = "alert";
     document.getElementById('body').appendChild(content);
 }

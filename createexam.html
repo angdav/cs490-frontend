@@ -191,13 +191,17 @@
                     "q_v": q_v
                 }
             };
-
-            console.log(JSON.stringify(finalJSON))
             
             var xhttp2 = new XMLHttpRequest();
             xhttp2.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    showAlert(this.responseText);
+                    var msg = JSON.parse(this.responseText).message;
+                    var content = document.createElement("DIV");
+                    content.style.fontSize = "large";
+                    content.innerHTML = msg;
+                    content.id = "alert";
+                    document.getElementById('mainbody').appendChild(content);
+                    window.scrollTo(0, document.body.scrollHeight);
                     setTimeout(function(){
                         window.location.href = "profmain.html";
                     }, 2000);

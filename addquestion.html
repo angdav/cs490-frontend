@@ -10,7 +10,7 @@
 
 <button id="back" style="float: left">Back to Main Screen</button><br><br><br><br><br>
 <body id="body">
-    <div style="float: left; width: 50%; max-width: 50%">
+    <div id="mainbody" style="float: left; width: 50%; max-width: 50%">
         <table id="maintable" style="width: 80%; max-width: 80%;">
             <h1>Submit a Question</h1>
             <tr>
@@ -45,7 +45,7 @@
                     <td><input type="text" placeholder="Argument name"/></td><td><input type="textarea" placeholder="Description"/></td>
                 </tr>
             </table>
-            
+
             <tr>
                 <td><button id="addarg" type="button">Add argument</button></td>
             </tr>
@@ -205,7 +205,13 @@
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    showAlert(this.responseText);
+                    var msg = JSON.parse(this.responseText).message;
+                    var content = document.createElement("DIV");
+                    content.style.fontSize = "large";
+                    content.innerHTML = msg;
+                    content.id = "alert";
+                    document.getElementById('mainbody').appendChild(content);
+                    window.scrollTo(0, document.body.scrollHeight);
                     setTimeout(function(){
                         window.location.href = "addquestion.html";
                     }, 2000);
