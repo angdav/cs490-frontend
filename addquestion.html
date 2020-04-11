@@ -17,7 +17,7 @@
                 <td><input id="questionname" name="questionname" type="text" placeholder="Question Name"/></td>
             </tr>
             <tr>
-                <td><textarea id="questionprompt" name="questionprompt" type="text" placeholder="Prompt"></textarea></td>
+                <td><input id="functionname" name="functionname" type="text" placeholder="Function Name" onkeyup="createdesc()"/></td>
             </tr>
             <tr>
                 <td><select id="difficulty">
@@ -36,13 +36,24 @@
                     <option value="classes">Classes</option>
                     <option value="loops">Loops</option>
                     <option value="turtle">Turtle</option>
-                </select></td>
+                </select><br><br></td>
+                
             </tr>
+            <tr>
+                <td><select id="constraint" onchange="createdesc()">
+                    <option value="default" selected="selected">Choose Constraint</option>
+                    <option value="while">While</option>
+                    <option value="for">For</option>
+                    <option value="print">Print</option>
+                    <option value="if">If</option>
+                </select><br> (constraint is optional) </td> 
+            </tr> 
 
             <table id="argtable">
                 <h3>Arguments</h3>
                 <tr>
-                    <td><input type="text" placeholder="Argument name"/></td><td><input type="textarea" placeholder="Description"/></td>
+                    <td><input type="text" placeholder="Argument name" onkeyup="createdesc()" value="arg1"/></td>
+                    <td><input type="textarea" placeholder="Description" onkeyup="createdesc()" value="an integer"/></td>
                 </tr>
             </table>
 
@@ -62,6 +73,12 @@
 
             <tr>
                 <td><button id="addtestcase" type="button">Add test case</button></td>
+            </tr>
+
+            <br><br><br><br>
+
+            <tr>
+                <td><textarea id="questionprompt" name="questionprompt" type="text" placeholder="Prompt"></textarea></td>
             </tr>
         </table>
         <br><br><br>
@@ -101,9 +118,11 @@
 
         var submit = document.getElementById("submit");
         var questionname = document.getElementById("questionname");
-        var questionprompt = document.getElementById("questionprompt");
+        var functionname = document.getElementById("functionname");
         var difficulty = document.getElementById("difficulty");
         var topic = document.getElementById("topic");
+        var constraint = document.getElementById("constraint");
+        var questionprompt = document.getElementById("questionprompt");
         var argtable = document.getElementById("argtable");
         var testcasetable = document.getElementById("testcasetable");
         var addarg = document.getElementById("addarg");
@@ -150,7 +169,7 @@
 
         addarg.addEventListener('click', function(){
             var newRow = argtable.insertRow();
-            newRow.innerHTML = '<td><input type="text" placeholder="Argument name"/></td><td><input type="textarea" placeholder="Description"/></td>';
+            newRow.innerHTML = '<td><input type="text" placeholder="Argument name" onkeyup="createdesc()"/></td><td><input type="textarea" placeholder="Description" onkeyup="createdesc()"/></td>';
         });
 
         addtestcase.addEventListener('click', function(){
@@ -190,8 +209,10 @@
                 "action": "addquestion",
                 "contents": {
                     "name": escapeHtml(questionname.value),
-                    "topic": topic.value,
+                    "f_name": functionname.value,
                     "difficulty": difficulty.value,
+                    "topic": topic.value,
+                    "constraint": constraint.value,
                     "question": escapeHtml(questionprompt.value),
                     "arg_c": arg_c,
                     "arg_v": arg_v,
@@ -222,6 +243,51 @@
             xhttp.send("req="+encodeURIComponent(JSON.stringify(finalJSON)));
         }
 
+        function createdesc(){
+            var functionname = document.getElementById('functionname');
+            var constraint = document.getElementById('constraint');
+            var questionprompt = document.getElementById('questionprompt');
+
+            var str = "Write a function named \"";
+            if (functionname.value != ""){
+                str += functionname.value;
+            } else {
+                str += "<funcname>";
+            }
+
+            str += "\" that takes arguments ";
+
+            var arg_c = 0;
+            var arg_v = {};
+
+            for (var i=0, row; row = argtable.rows[i]; i++){
+                argname = row.cells[0].children[0].value;
+                argdesc = row.cells[1].children[0].value;
+                console.log(argtable.tBodies[0].rows.length)
+                if (argtable.tBodies[0].rows.length == 1){
+                    str = str.substring(0, str.length - 2);
+                    str += " \"" + argname + "\", " + argdesc + ". ";
+
+                    arg_c++;
+                    break;
+                }
+                if (i == argtable.tBodies[0].rows.length - 1){
+                    str += "and \"" + argname + "\", " + argdesc + ". ";
+                } else {
+                    str += "\"" + argname + "\", " + argdesc + ", ";
+                }
+                arg_c++;
+            }
+
+            if (constraint.value != "default"){
+                str += "The function must include a " + constraint.value + " loop/statement.";
+            } else {
+                str += "";
+            }
+
+            questionprompt.value = str;
+
+        }
     </script>
 
 </body>
