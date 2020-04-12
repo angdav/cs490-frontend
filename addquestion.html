@@ -46,6 +46,7 @@
                     <option value="for">For</option>
                     <option value="print">Print</option>
                     <option value="if">If</option>
+                    <option value="return">Return</option>
                 </select><br> (constraint is optional) </td> 
             </tr> 
 
@@ -263,7 +264,6 @@
             for (var i=0, row; row = argtable.rows[i]; i++){
                 argname = row.cells[0].children[0].value;
                 argdesc = row.cells[1].children[0].value;
-                console.log(argtable.tBodies[0].rows.length)
                 if (argtable.tBodies[0].rows.length == 1){
                     str = str.substring(0, str.length - 2);
                     str += " \"" + argname + "\", " + argdesc + ". ";

@@ -138,20 +138,97 @@
                         console.log(json)
                         console.log(json['message']['student_data']['question_v'].replace(/\n/g, "\\n").replace(/\t/g, "\\t"))
                         var questions = JSON.parse(json['message']['student_data']['question_v'].replace(/\n/g, "\\n").replace(/\t/g, "\\t"));
+                        console.log(questions);
                         var question_c = json['message']['student_data']['question_c'];
 
                         var table = document.createElement('table');
                         table.id = 'questions';
                         table.style = 'width: 80%';
                         for (var i=1; i <= question_c; i++){
+                            console.log(i);
                             var tr = table.insertRow();
                             var td = tr.insertCell();
                             td.innerHTML += "<h1>Question " + i + "</h1>";
                             td.innerHTML += "<h3>" + escapeHtmlReverse(json['message'][i]['question']) + "</h3><br>";
                             td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['answer']).replace(/\+/g, " ")) + "</textarea>";
-                            td.innerHTML += "<br><input id=\"qscore\" style=\"width: 3em\" value=\"" + questions[i]['score'] + "\"> out of " + questions[i]['max'];
-                            td.innerHTML += "<br><br>Comments: ";
-                            td.innerHTML += "<br><textarea type=\"text\" style=\"max-width: 80%\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['comment']).replace(/\+/g, " ")) + "</textarea><br><br>";
+                            td.innerHTML += "<br><input readonly id=\"qscore\" style=\"width: 3em\" value=\"" + questions[i]['score'] + "\"> out of " + questions[i]['max'];
+                            td.innerHTML += "<br><br>";
+
+                            var test_c = questions[i]['test_c'];
+                            var table2 = document.createElement('table');
+                            table2.id = 'itemtable';
+                            table2.innerHTML += "<tr><th>points</th><th>max points</th><th>comments</th></tr>";
+                            header = ['item_points', 'item_max_points', 'item_comment'];
+                            console.log(questions[i]['item_max_points'])
+                            if (parseInt(questions[i]['item_max_points']['constraint']) != 0){
+                                f_line = ['args', 'colon', 'constraint', 'f_name'];
+                            } else {
+                                f_line = ['args', 'colon', 'f_name'];
+                            }
+                            for (var j=0; j < f_line.length; j++){
+
+                                var tr2 = table2.insertRow();
+
+                                var cell = tr2.insertCell();
+                                var pointval = document.createElement("INPUT");
+                                pointval.type = "number";
+                                pointval.style.width = "3em";
+                                pointval.style.textAlign = "center";
+                                pointval.addEventListener("input", function(){
+                                    console.log(this.parentElement.parentElement.parentElement.parentElement);
+                                    updatePerQuestionScore(this.parentElement.parentElement.parentElement.parentElement);
+                                });
+                                pointval.value = questions[i]['item_points'][f_line[j]];
+                                cell.appendChild(pointval);
+
+                                var cell = tr2.insertCell();
+                                cell.style.fontSize = "3em";
+                                var maxpointval = document.createTextNode(questions[i]['item_max_points'][f_line[j]]);
+                                cell.appendChild(maxpointval);
+
+                                var cell = tr2.insertCell();
+                                var commentval = document.createElement("TEXTAREA");
+                                commentval.style.width = "500px";
+                                commentval.style.height = "30px";
+                                commentval.style.textAlign = "center";
+                                console.log(questions[i]['item_comment'][f_line[j]])
+                                commentval.value = decodeURIComponent(escapeHtmlReverse(questions[i]['item_comment'][f_line[j]]).replace(/\+/g, " "));
+                                cell.appendChild(commentval);
+
+                            }
+
+                            for (var k=1; k <= test_c; k++){
+
+                                var tr3 = table2.insertRow();
+
+                                var cell = tr3.insertCell();
+                                var pointval = document.createElement("INPUT");
+                                pointval.type = "number";
+                                pointval.style.width = "3em";
+                                pointval.style.textAlign = "center";
+                                pointval.addEventListener("input", function(){
+                                    updatePerQuestionScore(this.parentElement.parentElement.parentElement.parentElement);
+                                });
+                                pointval.value = questions[i]['item_points'][k];
+                                cell.appendChild(pointval);
+
+                                var cell = tr3.insertCell();
+                                cell.style.fontSize = "3em";
+                                var maxpointval = document.createTextNode(questions[i]['item_max_points'][k]);
+                                cell.appendChild(maxpointval);
+
+                                var cell = tr3.insertCell();
+                                var commentval = document.createElement("TEXTAREA");
+                                commentval.style.width = "500px";
+                                commentval.style.height = "30px";
+                                commentval.style.textAlign = "center";
+                                console.log(questions[i]['item_comment'][k])
+                                commentval.value = decodeURIComponent(escapeHtmlReverse(questions[i]['item_comment'][k]).replace(/\+/g, " "));
+                                cell.appendChild(commentval);
+                            }
+
+                            td.appendChild(table2);
+
                         }
                         body.appendChild(table);
 
@@ -184,9 +261,9 @@
                                 var total = 0;
                                 for (var i=0, row; row = document.getElementById('questions').rows[i]; i++){
                                     val = row.cells[0].childNodes[5].value;
-                                    total += parseInt(val);
+                                    total += parseFloat(val);
                                 }
-                                document.getElementById('iscoretext').innerHTML = total;
+                                document.getElementById('iscoretext').innerHTML = Number(total.toFixed(2));
                             };
                         }
 
@@ -198,10 +275,54 @@
                             for (var i=0, row; row = table.rows[i]; i++){
                                 var q_num = json['message'][i+1]['q_num'];
                                 var answer = decodeURIComponent(questions[i+1]['answer'].replace(/\+/g, " "));
-                                var comment = row.cells[0].childNodes[11].value;
+                                // var comment = row.cells[0].childNodes[11].value;
                                 var iscore = row.cells[0].childNodes[5].value;
                                 var max = questions[i+1]['max'];
-                                qs[i+1] = {"q_num": q_num, "answer": answer,  "comment": comment,  "score": iscore,  "max": max};
+
+                                var flag = false;
+                                if (parseInt(questions[i+1]['item_max_points']['constraint']) != 0){
+                                    f_line = ['args', 'colon', 'constraint', 'f_name'];
+                                } else {
+                                    f_line = ['args', 'colon', 'f_name'];
+                                    flag = true;
+                                }
+
+                                var itemizedTable = row.cells[0].childNodes[9];
+
+                                var item_comment = {};
+                                var item_points = {};
+                                var item_max_points = {};
+                                for (var x=0; x<f_line.length; x++){
+                                    item_points[f_line[x]] = parseFloat(itemizedTable.rows[x+1].childNodes[0].childNodes[0].value);
+                                    item_max_points[f_line[x]] = parseFloat(itemizedTable.rows[x+1].childNodes[1].innerHTML);
+                                    item_comment[f_line[x]] = itemizedTable.rows[x+1].childNodes[2].childNodes[0].value;
+                                }
+                                var cont = x;
+                                if (flag){
+                                    item_points['constraint'] = 0;
+                                    item_max_points['constraint'] = 0;
+                                    item_comment['constraint'] = "N/A";
+                                }
+
+                                var testcaseCount = parseInt(questions[i+1]['test_c']);
+                                for (var x=0; x<testcaseCount; x++){
+                                    item_points[x+1] = parseFloat(itemizedTable.rows[cont+x+1].childNodes[0].childNodes[0].value);
+                                    item_max_points[x+1] = parseFloat(itemizedTable.rows[cont+x+1].childNodes[1].innerHTML);
+                                    item_comment[x+1] = itemizedTable.rows[cont+x+1].childNodes[2].childNodes[0].value;
+                                }
+
+                                qs[i+1] = {
+                                    "q_num": q_num,
+                                    "answer": answer,
+                                    "score": iscore,
+                                    "max": max,
+                                    "test_c": json['message'][i+1]['test_c'],
+                                    "item_comment": item_comment,
+                                    "item_points": item_points,
+                                    "item_max_points": item_max_points
+                                };
+
+                                console.log(qs[i+1])
                             }
 
                             var finalJSON = {
@@ -215,6 +336,9 @@
                                     "max": studentData['max']
                                 }
                             };
+
+                            console.log(finalJSON);
+                            console.log(JSON.stringify(finalJSON));
 
                             var xhttp = new XMLHttpRequest();
                             xhttp.onreadystatechange = function() {
@@ -243,6 +367,17 @@
                 xhttp3.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhttp3.send("req="+encodeURIComponent(JSON.stringify(finalJSON)));
             });
+        }
+
+        function updatePerQuestionScore(questionTable){
+            var questionSum = 0;
+            var total = questionTable.parentElement.childNodes[5];
+
+            for (var i=1, row; row = questionTable.rows[i]; i++){
+                questionSum += parseFloat(row.cells[0].childNodes[0].value);
+            }
+
+            total.value = questionSum;
         }
     </script>
 </body>

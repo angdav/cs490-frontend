@@ -145,7 +145,7 @@ textarea {
     100%  {transform:rotate(360deg)}
 }
 
-#qbanktable, #qbanktd, #questionarea, th{
+#qbanktable, #qbanktd, #questionarea, th, #itemtable{
     border: 1px solid white;
     border-collapse: collapse;
     padding: .5em;

@@ -88,13 +88,14 @@
 
             var msgs = JSON.parse(data).message;
             var testdata = msgs['test_data'];
+            console.log(msgs);
 
             var table = document.createElement('table');
             table.id = 'questions';
             for (var i=1; i <= testdata['question_c']; i++){
                 var tr = table.insertRow();
                 var td = tr.insertCell();
-                td.innerHTML += "<h1>" + escapeHtmlReverse(msgs[i]['name']) + "</h1>";
+                td.innerHTML += "<h1>" + escapeHtmlReverse(msgs[i]['name']) + "</h1><h3>" + escapeHtmlReverse(JSON.parse(testdata['question_v'])[i]['value']) + " points </h3><br>";
                 td.innerHTML += "<h3>" + escapeHtmlReverse(msgs[i]['question']) + "</h3><br>";
                 td.innerHTML += "<textarea type=\"text\" placeholder=\"Enter Answer Here\" style=\"max-width: 80%\" onkeydown=\"if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}\"></textarea>";
             }
@@ -122,8 +123,10 @@
                     }
                 };
                 for (var i=0, row; row = questions.rows[i]; i++){
-                    var code = row.cells[0].childNodes[3].value;
+                    var code = row.cells[0].childNodes[5].value;
                     var med = JSON.parse(testdata['question_v']);
+                    console.log(row.cells[0].childNodes)
+                    console.log(code);
                     finalJSON['contents'][i+1] = {
                         "q_num": msgs[i+1]['q_num'],
                         "code": escapeHtml(code),
@@ -132,12 +135,14 @@
                         "test_v": msgs[i+1]['test_v'],
                         "arg_c": msgs[i+1]['arg_c'],
                         "arg_v": msgs[i+1]['arg_v'],
-                        "question": msgs[i+1]['question']
+                        "question": msgs[i+1]['question'],
+                        "constraint": msgs[i+1]['constraint'],
+                        "f_name": msgs[i+1]['f_name']
                     };
                 }
 
                 console.log(finalJSON)
-                console.log(JSON.stringify(finalJSON))
+                console.log(encodeURIComponent(JSON.stringify(finalJSON)))
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4){
