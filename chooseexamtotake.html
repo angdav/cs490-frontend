@@ -88,7 +88,6 @@
 
             var msgs = JSON.parse(data).message;
             var testdata = msgs['test_data'];
-            console.log(msgs);
 
             var table = document.createElement('table');
             table.id = 'questions';
@@ -97,7 +96,7 @@
                 var td = tr.insertCell();
                 td.innerHTML += "<h1>" + escapeHtmlReverse(msgs[i]['name']) + "</h1><h3>" + escapeHtmlReverse(JSON.parse(testdata['question_v'])[i]['value']) + " points </h3><br>";
                 td.innerHTML += "<h3>" + escapeHtmlReverse(msgs[i]['question']) + "</h3><br>";
-                td.innerHTML += "<textarea type=\"text\" placeholder=\"Enter Answer Here\" style=\"max-width: 80%\" onkeydown=\"if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}\"></textarea>";
+                td.innerHTML += "<textarea id=\"codeblock\" type=\"text\" placeholder=\"Enter Answer Here\" style=\"max-width: 80%; width: 700px; height: 300px\" onkeydown=\"if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}\"></textarea>";
             }
             body.appendChild(table);
 
@@ -109,8 +108,6 @@
 
             var submitbutton = document.getElementById("submit");
             submitbutton.addEventListener('click', function(){
-
-                console.log(testdata)
 
                 var questions = document.getElementById("questions");
 
@@ -125,8 +122,6 @@
                 for (var i=0, row; row = questions.rows[i]; i++){
                     var code = row.cells[0].childNodes[5].value;
                     var med = JSON.parse(testdata['question_v']);
-                    console.log(row.cells[0].childNodes)
-                    console.log(code);
                     finalJSON['contents'][i+1] = {
                         "q_num": msgs[i+1]['q_num'],
                         "code": escapeHtml(code),
@@ -141,8 +136,6 @@
                     };
                 }
 
-                console.log(finalJSON)
-                console.log(encodeURIComponent(JSON.stringify(finalJSON)))
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4){

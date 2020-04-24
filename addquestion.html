@@ -139,7 +139,6 @@
         xhttp2.onreadystatechange = function() {
             if (this.readyState == 4){
                 var msgs = JSON.parse(this.responseText).message;
-                console.log(msgs)
                 var table = document.createElement('table');
                 table.id = 'qbanktable';
                 table.innerHTML += "<tr><th>q_num</th><th>name</th><th>topic</th><th>difficulty</th><th>question</th></tr>";
@@ -221,8 +220,6 @@
                     "test_v": test_v
                 }
             };
-
-            console.log(finalJSON)
             
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {

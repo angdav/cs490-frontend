@@ -97,28 +97,30 @@
                 var td = tr.insertCell();
                 td.innerHTML += "<h1>Question " + i + "</h1>";
                 td.innerHTML += "<h3>" + escapeHtmlReverse(json['message'][i]['question']) + "</h3><br>";
-                td.innerHTML += "<textarea readonly type=\"text\" style=\"max-width: 80%; width: 80%\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['answer']).replace(/\+/g, " ")) + "</textarea>";
+                td.innerHTML += "<textarea id=\"codeblock\" readonly type=\"text\" style=\"max-width: 80%; width: 700px; height: 300px\">" + decodeURIComponent(escapeHtmlReverse(questions[i]['answer']).replace(/\+/g, " ")) + "</textarea>";
                 td.innerHTML += "<br><input readonly id=\"qscore\" style=\"width: 3em\" value=\"" + questions[i]['score'] + "\"> out of " + questions[i]['max'] + "<br><br>";
-
+                td.innerHTML += "<br><br>";
+                
                 var test_c = questions[i]['test_c'];
                 var table2 = document.createElement('table');
                 table2.id = 'itemtable';
-                table2.innerHTML += "<tr><th>points</th><th>max points</th><th>comments</th></tr>";
-                header = ['item_points', 'item_max_points', 'item_comment'];
-                console.log(questions[i]['item_max_points'])
+                table2.innerHTML += "<tr><th>Criteria</th><th>Max Points</th><th>Earned Points</th></tr>";
+                header = ['item_points', 'item_max_points'];
                 if (parseInt(questions[i]['item_max_points']['constraint']) != 0){
-                    f_line = ['args', 'colon', 'constraint', 'f_name'];
+                    f_line = ['f_name', 'args', 'colon', 'constraint'];
                 } else {
-                    f_line = ['args', 'colon', 'f_name'];
+                    f_line = ['f_name', 'args', 'colon'];
                 }
                 for (var j=0; j < f_line.length; j++){
 
                     var tr2 = table2.insertRow();
 
                     var cell = tr2.insertCell();
-                    cell.style.fontSize = "3em";
-                    var pointval = document.createTextNode(questions[i]['item_points'][f_line[j]]);
-                    cell.appendChild(pointval);
+                    var descval = document.createElement("DIV");
+                    descval.style.textAlign = "center";
+                    descval.style.whiteSpace = "pre";
+                    descval.innerHTML = decodeURIComponent(escapeHtmlReverse(questions[i]['item_test_cases'][f_line[j]]).replace(/\+/g, " "));
+                    cell.appendChild(descval);
 
                     var cell = tr2.insertCell();
                     cell.style.fontSize = "3em";
@@ -126,13 +128,9 @@
                     cell.appendChild(maxpointval);
 
                     var cell = tr2.insertCell();
-                    var commentval = document.createElement("TEXTAREA");
-                    commentval.style.width = "500px";
-                    commentval.style.height = "30px";
-                    commentval.style.textAlign = "center";
-                    commentval.readOnly = true;
-                    commentval.value = decodeURIComponent(escapeHtmlReverse(questions[i]['item_comment'][f_line[j]]).replace(/\+/g, " "));
-                    cell.appendChild(commentval);
+                    cell.style.fontSize = "3em";
+                    var pointval = document.createTextNode(questions[i]['item_points'][f_line[j]]);
+                    cell.appendChild(pointval);
 
                 }
 
@@ -141,9 +139,11 @@
                     var tr3 = table2.insertRow();
 
                     var cell = tr3.insertCell();
-                    cell.style.fontSize = "3em";
-                    var pointval = document.createTextNode(questions[i]['item_points'][k]);
-                    cell.appendChild(pointval);
+                    var descval = document.createElement("DIV");
+                    descval.style.textAlign = "center";
+                    descval.style.whiteSpace = "pre";
+                    descval.innerHTML = decodeURIComponent(escapeHtmlReverse(questions[i]['item_test_cases'][k]).replace(/\+/g, " "));
+                    cell.appendChild(descval);
 
                     var cell = tr3.insertCell();
                     cell.style.fontSize = "3em";
@@ -151,15 +151,24 @@
                     cell.appendChild(maxpointval);
 
                     var cell = tr3.insertCell();
-                    var commentval = document.createElement("TEXTAREA");
-                    commentval.style.width = "500px";
-                    commentval.style.height = "30px";
-                    commentval.style.textAlign = "center";
-                    commentval.readOnly = true;
-                    commentval.value = decodeURIComponent(escapeHtmlReverse(questions[i]['item_comment'][k]).replace(/\+/g, " "));
-                    cell.appendChild(commentval);
+                    cell.style.fontSize = "3em";
+                    var pointval = document.createTextNode(questions[i]['item_points'][k]);
+                    cell.appendChild(pointval);
                 }
                 td.appendChild(table2);
+
+                td.appendChild(document.createElement("br"));
+                td.appendChild(document.createElement("br"));
+                td.appendChild(document.createTextNode("Comments:"));
+                td.appendChild(document.createElement("br"));
+
+                var commentval = document.createElement("TEXTAREA");
+                commentval.style.width = "700px";
+                commentval.style.height = "200px";
+                commentval.style.textAlign = "center";
+                commentval.readOnly = true;
+                commentval.value = decodeURIComponent(escapeHtmlReverse(questions[i]['comment']).replace(/\+/g, " "));
+                td.appendChild(commentval);
             }
 
             body.appendChild(table);
@@ -171,7 +180,7 @@
 
             var totscoretext = document.createElement('div');
             totscoretext.id = "totscoretext";
-            totscoretext.innerHTML = "Total Score: ";
+            totscoretext.innerHTML = "<br>Total Score: ";
 
             var outoftext = document.createElement('div');
             outoftext.id = "outoftext";
